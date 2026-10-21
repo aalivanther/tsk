@@ -1,0 +1,17 @@
+# pnpm-workspace.yaml — configuración de pnpm para el frontend.
+# En español: desde pnpm 11, pnpm ya NO lee el campo "pnpm" de package.json; sus ajustes
+# viven aquí. Este archivo NO declara un workspace de varios paquetes (web es un solo
+# proyecto): solo aloja ajustes de pnpm.
+
+# allowBuilds es la lista de dependencias a las que decidimos, de forma explícita, permitir
+# (true) o prohibir (false) la ejecución de sus scripts de instalación (postinstall). pnpm 11
+# los bloquea por defecto por seguridad: un postinstall malicioso podría ejecutar código al
+# instalar. Autorizamos solo los paquetes nativos que lo necesitan de verdad:
+#   - esbuild:       el empaquetador nativo que usa Vitest; su postinstall coloca el binario
+#                    de la plataforma (sin él, "pnpm run test" no arranca).
+#   - sharp:         optimizador de imágenes nativo que usa Next.js en build/runtime.
+#   - unrs-resolver: resolvedor nativo de imports usado por el ecosistema de ESLint.
+allowBuilds:
+  esbuild: true
+  sharp: true
+  unrs-resolver: true

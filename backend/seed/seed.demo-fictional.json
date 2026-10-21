@@ -1,0 +1,2175 @@
+{
+  "releases": [
+    {
+      "id": "las-horas-doradas",
+      "type": "SERIES",
+      "category": "TV",
+      "title": "Las Horas Doradas",
+      "overview": "Tres generaciones de una familia se enfrentan a sus secretos durante el último verano en una mansión que están por perder.",
+      "releaseDate": "2026-06-15",
+      "posterUrl": "https://picsum.photos/seed/las-horas-doradas/400/600",
+      "backdropUrl": "https://picsum.photos/seed/las-horas-doradas-bg/1280/720",
+      "genres": [
+        "Drama",
+        "Época"
+      ],
+      "originalLanguage": "Inglés",
+      "spokenLanguages": [
+        "Inglés",
+        "Español"
+      ],
+      "images": [
+        {
+          "url": "https://picsum.photos/seed/las-horas-doradas-g0/640/360",
+          "label": "Escena 01"
+        },
+        {
+          "url": "https://picsum.photos/seed/las-horas-doradas-g1/640/360",
+          "label": "Set de rodaje"
+        },
+        {
+          "url": "https://picsum.photos/seed/las-horas-doradas-g2/640/360",
+          "label": "Póster alt"
+        }
+      ],
+      "ratings": {
+        "tmdb": 8.6,
+        "imdb": "8.4",
+        "rottenTomatoes": "93%",
+        "metacritic": ""
+      },
+      "availability": {
+        "platforms": [],
+        "networks": [
+          "HBO",
+          "Max"
+        ]
+      },
+      "saga": {
+        "name": "Las Horas Doradas",
+        "items": [
+          {
+            "title": "Temporada 1",
+            "year": "2024",
+            "posterUrl": "https://picsum.photos/seed/las-horas-doradas-s0/300/450"
+          },
+          {
+            "title": "Temporada 2",
+            "year": "2025",
+            "posterUrl": "https://picsum.photos/seed/las-horas-doradas-s1/300/450"
+          },
+          {
+            "title": "Especial",
+            "year": "2025",
+            "posterUrl": "https://picsum.photos/seed/las-horas-doradas-s2/300/450"
+          }
+        ]
+      },
+      "cast": [
+        {
+          "name": "Helena Vidal",
+          "role": "Margarita",
+          "photoUrl": "https://picsum.photos/seed/las-horas-doradas-c0/200/200"
+        },
+        {
+          "name": "Tomás Rey",
+          "role": "Andrés",
+          "photoUrl": "https://picsum.photos/seed/las-horas-doradas-c1/200/200"
+        },
+        {
+          "name": "Lía Montero",
+          "role": "Joven Margarita",
+          "photoUrl": "https://picsum.photos/seed/las-horas-doradas-c2/200/200"
+        }
+      ],
+      "crew": [
+        {
+          "name": "Sofía Lindqvist",
+          "role": "Creadora · Dir.",
+          "photoUrl": "https://picsum.photos/seed/las-horas-doradas-cr0/200/200"
+        },
+        {
+          "name": "Daniel Ferro",
+          "role": "Guion",
+          "photoUrl": "https://picsum.photos/seed/las-horas-doradas-cr1/200/200"
+        }
+      ],
+      "videos": [
+        {
+          "youtubeKey": "aqz-KE-bpKQ",
+          "kind": "VIDEO_KIND_TRAILER"
+        },
+        {
+          "youtubeKey": "ZmnyHQbBNL8"
+        }
+      ]
+    },
+    {
+      "id": "el-ultimo-faro",
+      "type": "MOVIE",
+      "category": "CINE",
+      "title": "El Último Faro",
+      "overview": "Un farero solitario descubre que la luz que cuida esconde un mensaje que alguien lleva décadas esperando.",
+      "releaseDate": "2026-06-05",
+      "posterUrl": "https://picsum.photos/seed/el-ultimo-faro/400/600",
+      "backdropUrl": "https://picsum.photos/seed/el-ultimo-faro-bg/1280/720",
+      "genres": [
+        "Thriller",
+        "Drama"
+      ],
+      "originalLanguage": "Español",
+      "spokenLanguages": [
+        "Español"
+      ],
+      "images": [
+        {
+          "url": "https://picsum.photos/seed/el-ultimo-faro-g0/640/360",
+          "label": "Faro nocturno"
+        },
+        {
+          "url": "https://picsum.photos/seed/el-ultimo-faro-g1/640/360",
+          "label": "Escena 02"
+        }
+      ],
+      "ratings": {
+        "tmdb": 7.8,
+        "imdb": "7.5",
+        "rottenTomatoes": "81%",
+        "metacritic": ""
+      },
+      "availability": {
+        "platforms": [],
+        "networks": []
+      },
+      "cast": [
+        {
+          "name": "Íñigo Salas",
+          "role": "El farero",
+          "photoUrl": "https://picsum.photos/seed/el-ultimo-faro-c0/200/200"
+        },
+        {
+          "name": "Renata Cruz",
+          "role": "La visitante",
+          "photoUrl": "https://picsum.photos/seed/el-ultimo-faro-c1/200/200"
+        }
+      ],
+      "crew": [
+        {
+          "name": "Mariana Ortega",
+          "role": "Dirección",
+          "photoUrl": "https://picsum.photos/seed/el-ultimo-faro-cr0/200/200"
+        }
+      ],
+      "videos": [
+        {
+          "youtubeKey": "eRsGyueVLvQ",
+          "kind": "VIDEO_KIND_TRAILER"
+        }
+      ]
+    },
+    {
+      "id": "niebla-capital",
+      "type": "SERIES",
+      "category": "STREAMING",
+      "title": "Niebla Capital",
+      "overview": "Una detective regresa a su ciudad natal, cubierta por una niebla perpetua, para resolver una desaparición que la marcó.",
+      "releaseDate": "2026-06-08",
+      "posterUrl": "https://picsum.photos/seed/niebla-capital/400/600",
+      "backdropUrl": "https://picsum.photos/seed/niebla-capital-bg/1280/720",
+      "genres": [
+        "Crimen",
+        "Misterio"
+      ],
+      "originalLanguage": "Español",
+      "spokenLanguages": [
+        "Español"
+      ],
+      "images": [
+        {
+          "url": "https://picsum.photos/seed/niebla-capital-g0/640/360",
+          "label": "Niebla"
+        },
+        {
+          "url": "https://picsum.photos/seed/niebla-capital-g1/640/360",
+          "label": "Comisaría"
+        }
+      ],
+      "ratings": {
+        "tmdb": 8.1,
+        "imdb": "7.9",
+        "rottenTomatoes": "88%",
+        "metacritic": ""
+      },
+      "availability": {
+        "platforms": [
+          "Netflix"
+        ],
+        "networks": []
+      },
+      "cast": [
+        {
+          "name": "Carla Domínguez",
+          "role": "Det. Ríos",
+          "photoUrl": "https://picsum.photos/seed/niebla-capital-c0/200/200"
+        },
+        {
+          "name": "Pablo Nieto",
+          "role": "Comandante",
+          "photoUrl": "https://picsum.photos/seed/niebla-capital-c1/200/200"
+        }
+      ],
+      "crew": [
+        {
+          "name": "Esteban Vargas",
+          "role": "Creador",
+          "photoUrl": "https://picsum.photos/seed/niebla-capital-cr0/200/200"
+        }
+      ],
+      "videos": [
+        {
+          "youtubeKey": "R6MlUcmOul8",
+          "kind": "VIDEO_KIND_TRAILER"
+        }
+      ]
+    },
+    {
+      "id": "cobalto",
+      "type": "MOVIE",
+      "category": "STREAMING",
+      "title": "Cobalto",
+      "overview": "En una mina lunar, un equipo descubre un mineral que altera la percepción del tiempo de quien lo toca.",
+      "releaseDate": "2026-06-12",
+      "posterUrl": "https://picsum.photos/seed/cobalto/400/600",
+      "backdropUrl": "https://picsum.photos/seed/cobalto-bg/1280/720",
+      "genres": [
+        "Sci-Fi",
+        "Acción"
+      ],
+      "originalLanguage": "Inglés",
+      "spokenLanguages": [
+        "Inglés",
+        "Español"
+      ],
+      "images": [
+        {
+          "url": "https://picsum.photos/seed/cobalto-g0/640/360",
+          "label": "Mina lunar"
+        },
+        {
+          "url": "https://picsum.photos/seed/cobalto-g1/640/360",
+          "label": "Nave"
+        },
+        {
+          "url": "https://picsum.photos/seed/cobalto-g2/640/360",
+          "label": "Concept art"
+        }
+      ],
+      "ratings": {
+        "tmdb": 7.2,
+        "imdb": "7.0",
+        "rottenTomatoes": "74%",
+        "metacritic": ""
+      },
+      "availability": {
+        "platforms": [
+          "Prime Video"
+        ],
+        "networks": []
+      },
+      "cast": [
+        {
+          "name": "Marcus Hale",
+          "role": "Cmdte. Vance",
+          "photoUrl": "https://picsum.photos/seed/cobalto-c0/200/200"
+        },
+        {
+          "name": "Yuki Tanaka",
+          "role": "Dra. Iwasaki",
+          "photoUrl": "https://picsum.photos/seed/cobalto-c1/200/200"
+        }
+      ],
+      "crew": [
+        {
+          "name": "R. Ashford",
+          "role": "Dirección",
+          "photoUrl": "https://picsum.photos/seed/cobalto-cr0/200/200"
+        }
+      ],
+      "videos": [
+        {
+          "youtubeKey": "Y-rmzh0PI3c",
+          "kind": "VIDEO_KIND_TRAILER"
+        },
+        {
+          "youtubeKey": "XSk9oXFh8RA"
+        }
+      ]
+    },
+    {
+      "id": "tinta-roja",
+      "type": "MOVIE",
+      "category": "CINE",
+      "title": "Tinta Roja",
+      "overview": "Una novelista de terror empieza a vivir en carne propia los crímenes que escribe.",
+      "releaseDate": "2026-06-20",
+      "posterUrl": "https://picsum.photos/seed/tinta-roja/400/600",
+      "backdropUrl": "https://picsum.photos/seed/tinta-roja-bg/1280/720",
+      "genres": [
+        "Terror"
+      ],
+      "originalLanguage": "Español",
+      "spokenLanguages": [
+        "Español"
+      ],
+      "images": [
+        {
+          "url": "https://picsum.photos/seed/tinta-roja-g0/640/360",
+          "label": "Estudio"
+        },
+        {
+          "url": "https://picsum.photos/seed/tinta-roja-g1/640/360",
+          "label": "Escena 05"
+        }
+      ],
+      "ratings": {
+        "tmdb": 6.9,
+        "imdb": "6.6",
+        "rottenTomatoes": "68%",
+        "metacritic": ""
+      },
+      "availability": {
+        "platforms": [],
+        "networks": []
+      },
+      "cast": [
+        {
+          "name": "Adriana Sol",
+          "role": "La novelista",
+          "photoUrl": "https://picsum.photos/seed/tinta-roja-c0/200/200"
+        }
+      ],
+      "crew": [
+        {
+          "name": "Hugo Lara",
+          "role": "Dirección",
+          "photoUrl": "https://picsum.photos/seed/tinta-roja-cr0/200/200"
+        }
+      ],
+      "videos": [
+        {
+          "youtubeKey": "WhWc3b3KhnY",
+          "kind": "VIDEO_KIND_TRAILER"
+        }
+      ]
+    },
+    {
+      "id": "verano-en-reversa",
+      "type": "MOVIE",
+      "category": "STREAMING",
+      "title": "Verano en Reversa",
+      "overview": "Una familia revive el mismo día de vacaciones una y otra vez, pero en orden inverso.",
+      "releaseDate": "2026-06-26",
+      "posterUrl": "https://picsum.photos/seed/verano-en-reversa/400/600",
+      "backdropUrl": "https://picsum.photos/seed/verano-en-reversa-bg/1280/720",
+      "genres": [
+        "Comedia",
+        "Familiar"
+      ],
+      "originalLanguage": "Inglés",
+      "spokenLanguages": [
+        "Inglés",
+        "Español"
+      ],
+      "images": [
+        {
+          "url": "https://picsum.photos/seed/verano-en-reversa-g0/640/360",
+          "label": "Playa"
+        },
+        {
+          "url": "https://picsum.photos/seed/verano-en-reversa-g1/640/360",
+          "label": "Casa"
+        }
+      ],
+      "ratings": {
+        "tmdb": 7.0,
+        "imdb": "6.8",
+        "rottenTomatoes": "71%",
+        "metacritic": ""
+      },
+      "availability": {
+        "platforms": [
+          "Disney+"
+        ],
+        "networks": []
+      },
+      "cast": [
+        {
+          "name": "Bell Hartman",
+          "role": "Mamá",
+          "photoUrl": "https://picsum.photos/seed/verano-en-reversa-c0/200/200"
+        },
+        {
+          "name": "Joon Park",
+          "role": "Papá",
+          "photoUrl": "https://picsum.photos/seed/verano-en-reversa-c1/200/200"
+        }
+      ],
+      "crew": [
+        {
+          "name": "T. Coleman",
+          "role": "Dirección",
+          "photoUrl": "https://picsum.photos/seed/verano-en-reversa-cr0/200/200"
+        }
+      ],
+      "videos": [
+        {
+          "youtubeKey": "SkVqJ1SGeL0",
+          "kind": "VIDEO_KIND_TRAILER"
+        }
+      ]
+    },
+    {
+      "id": "frecuencia-9",
+      "type": "SERIES",
+      "category": "TV",
+      "title": "Frecuencia 9",
+      "overview": "Una estación de radio nocturna comienza a recibir transmisiones de un futuro que aún no ocurre.",
+      "releaseDate": "2026-07-03",
+      "posterUrl": "https://picsum.photos/seed/frecuencia-9/400/600",
+      "backdropUrl": "https://picsum.photos/seed/frecuencia-9-bg/1280/720",
+      "genres": [
+        "Misterio",
+        "Thriller"
+      ],
+      "originalLanguage": "Inglés",
+      "spokenLanguages": [
+        "Inglés",
+        "Español"
+      ],
+      "images": [
+        {
+          "url": "https://picsum.photos/seed/frecuencia-9-g0/640/360",
+          "label": "Cabina"
+        },
+        {
+          "url": "https://picsum.photos/seed/frecuencia-9-g1/640/360",
+          "label": "Antena"
+        }
+      ],
+      "ratings": {
+        "tmdb": 7.7,
+        "imdb": "7.5",
+        "rottenTomatoes": "84%",
+        "metacritic": ""
+      },
+      "availability": {
+        "platforms": [],
+        "networks": [
+          "Sony",
+          "AXN"
+        ]
+      },
+      "cast": [
+        {
+          "name": "Owen Brooks",
+          "role": "El locutor",
+          "photoUrl": "https://picsum.photos/seed/frecuencia-9-c0/200/200"
+        },
+        {
+          "name": "Sara Lindholm",
+          "role": "La ingeniera",
+          "photoUrl": "https://picsum.photos/seed/frecuencia-9-c1/200/200"
+        }
+      ],
+      "crew": [
+        {
+          "name": "N. Petrov",
+          "role": "Creador",
+          "photoUrl": "https://picsum.photos/seed/frecuencia-9-cr0/200/200"
+        }
+      ],
+      "videos": [
+        {
+          "youtubeKey": "aqz-KE-bpKQ",
+          "kind": "VIDEO_KIND_TRAILER"
+        },
+        {
+          "youtubeKey": "ZmnyHQbBNL8"
+        }
+      ]
+    },
+    {
+      "id": "cumbre",
+      "type": "MOVIE",
+      "category": "CINE",
+      "title": "Cumbre",
+      "overview": "Dos escaladores rivales quedan atrapados a 8,000 metros y deben confiar el uno en el otro para bajar vivos.",
+      "releaseDate": "2026-07-10",
+      "posterUrl": "https://picsum.photos/seed/cumbre/400/600",
+      "backdropUrl": "https://picsum.photos/seed/cumbre-bg/1280/720",
+      "genres": [
+        "Aventura"
+      ],
+      "originalLanguage": "Español",
+      "spokenLanguages": [
+        "Español"
+      ],
+      "images": [
+        {
+          "url": "https://picsum.photos/seed/cumbre-g0/640/360",
+          "label": "Cumbre"
+        },
+        {
+          "url": "https://picsum.photos/seed/cumbre-g1/640/360",
+          "label": "Campamento"
+        }
+      ],
+      "ratings": {
+        "tmdb": 7.4,
+        "imdb": "7.2",
+        "rottenTomatoes": "79%",
+        "metacritic": ""
+      },
+      "availability": {
+        "platforms": [],
+        "networks": []
+      },
+      "cast": [
+        {
+          "name": "Diego Maldonado",
+          "role": "Escalador A",
+          "photoUrl": "https://picsum.photos/seed/cumbre-c0/200/200"
+        },
+        {
+          "name": "Iván Cortés",
+          "role": "Escalador B",
+          "photoUrl": "https://picsum.photos/seed/cumbre-c1/200/200"
+        }
+      ],
+      "crew": [
+        {
+          "name": "L. Fontaine",
+          "role": "Dirección",
+          "photoUrl": "https://picsum.photos/seed/cumbre-cr0/200/200"
+        }
+      ],
+      "videos": [
+        {
+          "youtubeKey": "eRsGyueVLvQ",
+          "kind": "VIDEO_KIND_TRAILER"
+        }
+      ]
+    },
+    {
+      "id": "el-jardin-de-sal",
+      "type": "SERIES",
+      "category": "STREAMING",
+      "title": "El Jardín de Sal",
+      "overview": "En un pueblo costero que se hunde, una botánica intenta salvar las últimas semillas de una especie imposible.",
+      "releaseDate": "2026-07-16",
+      "posterUrl": "https://picsum.photos/seed/el-jardin-de-sal/400/600",
+      "backdropUrl": "https://picsum.photos/seed/el-jardin-de-sal-bg/1280/720",
+      "genres": [
+        "Drama"
+      ],
+      "originalLanguage": "Inglés",
+      "spokenLanguages": [
+        "Inglés",
+        "Español"
+      ],
+      "images": [
+        {
+          "url": "https://picsum.photos/seed/el-jardin-de-sal-g0/640/360",
+          "label": "Jardín"
+        },
+        {
+          "url": "https://picsum.photos/seed/el-jardin-de-sal-g1/640/360",
+          "label": "Costa"
+        }
+      ],
+      "ratings": {
+        "tmdb": 8.3,
+        "imdb": "8.1",
+        "rottenTomatoes": "91%",
+        "metacritic": ""
+      },
+      "availability": {
+        "platforms": [
+          "Apple TV+"
+        ],
+        "networks": []
+      },
+      "cast": [
+        {
+          "name": "Niamh Foster",
+          "role": "La botánica",
+          "photoUrl": "https://picsum.photos/seed/el-jardin-de-sal-c0/200/200"
+        },
+        {
+          "name": "Theo Mensah",
+          "role": "El cartógrafo",
+          "photoUrl": "https://picsum.photos/seed/el-jardin-de-sal-c1/200/200"
+        }
+      ],
+      "crew": [
+        {
+          "name": "A. Bjornson",
+          "role": "Creadora",
+          "photoUrl": "https://picsum.photos/seed/el-jardin-de-sal-cr0/200/200"
+        }
+      ],
+      "videos": [
+        {
+          "youtubeKey": "R6MlUcmOul8",
+          "kind": "VIDEO_KIND_TRAILER"
+        }
+      ]
+    },
+    {
+      "id": "vertigo-neon",
+      "type": "MOVIE",
+      "category": "STREAMING",
+      "title": "Vértigo Neón",
+      "overview": "Una corredora clandestina acepta un último trabajo que la enfrenta a su propio pasado.",
+      "releaseDate": "2026-07-16",
+      "posterUrl": "https://picsum.photos/seed/vertigo-neon/400/600",
+      "backdropUrl": "https://picsum.photos/seed/vertigo-neon-bg/1280/720",
+      "genres": [
+        "Acción"
+      ],
+      "originalLanguage": "Coreano",
+      "spokenLanguages": [
+        "Coreano",
+        "Español"
+      ],
+      "images": [
+        {
+          "url": "https://picsum.photos/seed/vertigo-neon-g0/640/360",
+          "label": "Ciudad neón"
+        },
+        {
+          "url": "https://picsum.photos/seed/vertigo-neon-g1/640/360",
+          "label": "Auto"
+        }
+      ],
+      "ratings": {
+        "tmdb": 7.1,
+        "imdb": "6.9",
+        "rottenTomatoes": "72%",
+        "metacritic": ""
+      },
+      "availability": {
+        "platforms": [
+          "Netflix"
+        ],
+        "networks": []
+      },
+      "cast": [
+        {
+          "name": "Ha-eun Seo",
+          "role": "La corredora",
+          "photoUrl": "https://picsum.photos/seed/vertigo-neon-c0/200/200"
+        }
+      ],
+      "crew": [
+        {
+          "name": "J. Park",
+          "role": "Dirección",
+          "photoUrl": "https://picsum.photos/seed/vertigo-neon-cr0/200/200"
+        }
+      ],
+      "videos": [
+        {
+          "youtubeKey": "Y-rmzh0PI3c",
+          "kind": "VIDEO_KIND_TRAILER"
+        },
+        {
+          "youtubeKey": "XSk9oXFh8RA"
+        }
+      ]
+    },
+    {
+      "id": "pulso",
+      "type": "SERIES",
+      "category": "STREAMING",
+      "title": "Pulso",
+      "overview": "En un hospital al borde del colapso, un residente toma decisiones que ningún protocolo contempla.",
+      "releaseDate": "2026-07-16",
+      "posterUrl": "https://picsum.photos/seed/pulso/400/600",
+      "backdropUrl": "https://picsum.photos/seed/pulso-bg/1280/720",
+      "genres": [
+        "Médico",
+        "Drama"
+      ],
+      "originalLanguage": "Inglés",
+      "spokenLanguages": [
+        "Inglés",
+        "Español"
+      ],
+      "images": [
+        {
+          "url": "https://picsum.photos/seed/pulso-g0/640/360",
+          "label": "Quirófano"
+        },
+        {
+          "url": "https://picsum.photos/seed/pulso-g1/640/360",
+          "label": "Pasillo"
+        }
+      ],
+      "ratings": {
+        "tmdb": 7.5,
+        "imdb": "7.3",
+        "rottenTomatoes": "80%",
+        "metacritic": ""
+      },
+      "availability": {
+        "platforms": [
+          "Prime Video"
+        ],
+        "networks": []
+      },
+      "cast": [
+        {
+          "name": "Alma Reyes",
+          "role": "Dra. Solano",
+          "photoUrl": "https://picsum.photos/seed/pulso-c0/200/200"
+        }
+      ],
+      "crew": [
+        {
+          "name": "K. Webb",
+          "role": "Creador",
+          "photoUrl": "https://picsum.photos/seed/pulso-cr0/200/200"
+        }
+      ],
+      "videos": [
+        {
+          "youtubeKey": "WhWc3b3KhnY",
+          "kind": "VIDEO_KIND_TRAILER"
+        }
+      ]
+    },
+    {
+      "id": "cardenal",
+      "type": "MOVIE",
+      "category": "STREAMING",
+      "title": "Cardenal",
+      "overview": "En un cónclave, un cardenal poco favorito descubre un secreto que podría derrumbar a la Iglesia.",
+      "releaseDate": "2026-07-16",
+      "posterUrl": "https://picsum.photos/seed/cardenal/400/600",
+      "backdropUrl": "https://picsum.photos/seed/cardenal-bg/1280/720",
+      "genres": [
+        "Thriller",
+        "Político"
+      ],
+      "originalLanguage": "Italiano",
+      "spokenLanguages": [
+        "Italiano",
+        "Español"
+      ],
+      "images": [
+        {
+          "url": "https://picsum.photos/seed/cardenal-g0/640/360",
+          "label": "Capilla"
+        },
+        {
+          "url": "https://picsum.photos/seed/cardenal-g1/640/360",
+          "label": "Cónclave"
+        }
+      ],
+      "ratings": {
+        "tmdb": 7.6,
+        "imdb": "7.4",
+        "rottenTomatoes": "82%",
+        "metacritic": ""
+      },
+      "availability": {
+        "platforms": [
+          "Max"
+        ],
+        "networks": []
+      },
+      "cast": [
+        {
+          "name": "Paolo Greco",
+          "role": "El cardenal",
+          "photoUrl": "https://picsum.photos/seed/cardenal-c0/200/200"
+        }
+      ],
+      "crew": [
+        {
+          "name": "M. Ricci",
+          "role": "Dirección",
+          "photoUrl": "https://picsum.photos/seed/cardenal-cr0/200/200"
+        }
+      ],
+      "videos": [
+        {
+          "youtubeKey": "SkVqJ1SGeL0",
+          "kind": "VIDEO_KIND_TRAILER"
+        }
+      ]
+    },
+    {
+      "id": "costa-negra",
+      "type": "SERIES",
+      "category": "TV",
+      "title": "Costa Negra",
+      "overview": "Dos familias pesqueras se enfrentan por una herencia y un cuerpo que el mar no quiso quedarse.",
+      "releaseDate": "2026-07-16",
+      "posterUrl": "https://picsum.photos/seed/costa-negra/400/600",
+      "backdropUrl": "https://picsum.photos/seed/costa-negra-bg/1280/720",
+      "genres": [
+        "Crimen"
+      ],
+      "originalLanguage": "Inglés",
+      "spokenLanguages": [
+        "Inglés",
+        "Español"
+      ],
+      "images": [
+        {
+          "url": "https://picsum.photos/seed/costa-negra-g0/640/360",
+          "label": "Puerto"
+        },
+        {
+          "url": "https://picsum.photos/seed/costa-negra-g1/640/360",
+          "label": "Barco"
+        }
+      ],
+      "ratings": {
+        "tmdb": 7.9,
+        "imdb": "7.7",
+        "rottenTomatoes": "86%",
+        "metacritic": ""
+      },
+      "availability": {
+        "platforms": [],
+        "networks": [
+          "HBO"
+        ]
+      },
+      "cast": [
+        {
+          "name": "Mara Quinn",
+          "role": "Eithne",
+          "photoUrl": "https://picsum.photos/seed/costa-negra-c0/200/200"
+        },
+        {
+          "name": "Sean Doyle",
+          "role": "Cormac",
+          "photoUrl": "https://picsum.photos/seed/costa-negra-c1/200/200"
+        }
+      ],
+      "crew": [
+        {
+          "name": "F. Walsh",
+          "role": "Creador",
+          "photoUrl": "https://picsum.photos/seed/costa-negra-cr0/200/200"
+        }
+      ],
+      "videos": [
+        {
+          "youtubeKey": "aqz-KE-bpKQ",
+          "kind": "VIDEO_KIND_TRAILER"
+        },
+        {
+          "youtubeKey": "ZmnyHQbBNL8"
+        }
+      ]
+    },
+    {
+      "id": "la-sombra-larga",
+      "type": "MOVIE",
+      "category": "TV",
+      "title": "La Sombra Larga",
+      "overview": "Un alguacil retirado vuelve al desierto que juró no volver a pisar.",
+      "releaseDate": "2026-07-16",
+      "posterUrl": "https://picsum.photos/seed/la-sombra-larga/400/600",
+      "backdropUrl": "https://picsum.photos/seed/la-sombra-larga-bg/1280/720",
+      "genres": [
+        "Western"
+      ],
+      "originalLanguage": "Inglés",
+      "spokenLanguages": [
+        "Inglés",
+        "Español"
+      ],
+      "images": [
+        {
+          "url": "https://picsum.photos/seed/la-sombra-larga-g0/640/360",
+          "label": "Desierto"
+        },
+        {
+          "url": "https://picsum.photos/seed/la-sombra-larga-g1/640/360",
+          "label": "Pueblo"
+        }
+      ],
+      "ratings": {
+        "tmdb": 7.3,
+        "imdb": "7.1",
+        "rottenTomatoes": "77%",
+        "metacritic": ""
+      },
+      "availability": {
+        "platforms": [],
+        "networks": [
+          "Sony"
+        ]
+      },
+      "cast": [
+        {
+          "name": "Cole Barrett",
+          "role": "El alguacil",
+          "photoUrl": "https://picsum.photos/seed/la-sombra-larga-c0/200/200"
+        }
+      ],
+      "crew": [
+        {
+          "name": "D. Reyes",
+          "role": "Dirección",
+          "photoUrl": "https://picsum.photos/seed/la-sombra-larga-cr0/200/200"
+        }
+      ],
+      "videos": [
+        {
+          "youtubeKey": "eRsGyueVLvQ",
+          "kind": "VIDEO_KIND_TRAILER"
+        }
+      ]
+    },
+    {
+      "id": "eclipse-total",
+      "type": "MOVIE",
+      "category": "CINE",
+      "title": "Eclipse Total",
+      "overview": "Durante un eclipse, una comunidad entera decide confesar lo que nunca se atrevió a decir.",
+      "releaseDate": "2026-07-16",
+      "posterUrl": "https://picsum.photos/seed/eclipse-total/400/600",
+      "backdropUrl": "https://picsum.photos/seed/eclipse-total-bg/1280/720",
+      "genres": [
+        "Drama"
+      ],
+      "originalLanguage": "Español",
+      "spokenLanguages": [
+        "Español"
+      ],
+      "images": [
+        {
+          "url": "https://picsum.photos/seed/eclipse-total-g0/640/360",
+          "label": "Eclipse"
+        },
+        {
+          "url": "https://picsum.photos/seed/eclipse-total-g1/640/360",
+          "label": "Plaza"
+        }
+      ],
+      "ratings": {
+        "tmdb": 7.0,
+        "imdb": "6.8",
+        "rottenTomatoes": "70%",
+        "metacritic": ""
+      },
+      "availability": {
+        "platforms": [],
+        "networks": []
+      },
+      "cast": [
+        {
+          "name": "Lucía Fernández",
+          "role": "Marta",
+          "photoUrl": "https://picsum.photos/seed/eclipse-total-c0/200/200"
+        }
+      ],
+      "crew": [
+        {
+          "name": "P. Quintana",
+          "role": "Dirección",
+          "photoUrl": "https://picsum.photos/seed/eclipse-total-cr0/200/200"
+        }
+      ],
+      "videos": [
+        {
+          "youtubeKey": "R6MlUcmOul8",
+          "kind": "VIDEO_KIND_TRAILER"
+        }
+      ]
+    },
+    {
+      "id": "mareas",
+      "type": "MOVIE",
+      "category": "CINE",
+      "title": "Mareas",
+      "overview": "Dos desconocidos se reencuentran cada año en la misma playa, solo el día de la marea más alta.",
+      "releaseDate": "2026-07-16",
+      "posterUrl": "https://picsum.photos/seed/mareas/400/600",
+      "backdropUrl": "https://picsum.photos/seed/mareas-bg/1280/720",
+      "genres": [
+        "Romance"
+      ],
+      "originalLanguage": "Francés",
+      "spokenLanguages": [
+        "Francés",
+        "Español"
+      ],
+      "images": [
+        {
+          "url": "https://picsum.photos/seed/mareas-g0/640/360",
+          "label": "Playa"
+        },
+        {
+          "url": "https://picsum.photos/seed/mareas-g1/640/360",
+          "label": "Faro"
+        }
+      ],
+      "ratings": {
+        "tmdb": 6.8,
+        "imdb": "6.6",
+        "rottenTomatoes": "67%",
+        "metacritic": ""
+      },
+      "availability": {
+        "platforms": [],
+        "networks": []
+      },
+      "cast": [
+        {
+          "name": "Camille Roy",
+          "role": "Elle",
+          "photoUrl": "https://picsum.photos/seed/mareas-c0/200/200"
+        }
+      ],
+      "crew": [
+        {
+          "name": "G. Laurent",
+          "role": "Dirección",
+          "photoUrl": "https://picsum.photos/seed/mareas-cr0/200/200"
+        }
+      ],
+      "videos": [
+        {
+          "youtubeKey": "Y-rmzh0PI3c",
+          "kind": "VIDEO_KIND_TRAILER"
+        },
+        {
+          "youtubeKey": "XSk9oXFh8RA"
+        }
+      ]
+    },
+    {
+      "id": "requiem-para-un-robot",
+      "type": "MOVIE",
+      "category": "STREAMING",
+      "title": "Réquiem para un Robot",
+      "overview": "El último androide cuidador de la Tierra emprende un viaje para apagar el reactor que aún protege a una humanidad ya extinta.",
+      "releaseDate": "2026-07-31",
+      "posterUrl": "https://picsum.photos/seed/requiem-para-un-robot/400/600",
+      "backdropUrl": "https://picsum.photos/seed/requiem-para-un-robot-bg/1280/720",
+      "genres": [
+        "Sci-Fi",
+        "Drama"
+      ],
+      "originalLanguage": "Inglés",
+      "spokenLanguages": [
+        "Inglés",
+        "Español"
+      ],
+      "images": [
+        {
+          "url": "https://picsum.photos/seed/requiem-para-un-robot-g0/640/360",
+          "label": "Tierra yerma"
+        },
+        {
+          "url": "https://picsum.photos/seed/requiem-para-un-robot-g1/640/360",
+          "label": "Reactor"
+        },
+        {
+          "url": "https://picsum.photos/seed/requiem-para-un-robot-g2/640/360",
+          "label": "Concept art"
+        }
+      ],
+      "ratings": {
+        "tmdb": 8.0,
+        "imdb": "7.8",
+        "rottenTomatoes": "87%",
+        "metacritic": ""
+      },
+      "availability": {
+        "platforms": [
+          "Max"
+        ],
+        "networks": []
+      },
+      "saga": {
+        "name": "Réquiem",
+        "items": [
+          {
+            "title": "Réquiem",
+            "year": "2021",
+            "posterUrl": "https://picsum.photos/seed/requiem-para-un-robot-s0/300/450"
+          },
+          {
+            "title": "Réquiem: Génesis",
+            "year": "2023",
+            "posterUrl": "https://picsum.photos/seed/requiem-para-un-robot-s1/300/450"
+          }
+        ]
+      },
+      "cast": [
+        {
+          "name": "Ada Mercer",
+          "role": "La ingeniera",
+          "photoUrl": "https://picsum.photos/seed/requiem-para-un-robot-c0/200/200"
+        },
+        {
+          "name": "Voz: KAEL",
+          "role": "El androide",
+          "photoUrl": "https://picsum.photos/seed/requiem-para-un-robot-c1/200/200"
+        }
+      ],
+      "crew": [
+        {
+          "name": "Idris Vale",
+          "role": "Dirección · Guion",
+          "photoUrl": "https://picsum.photos/seed/requiem-para-un-robot-cr0/200/200"
+        },
+        {
+          "name": "M. Sato",
+          "role": "Música",
+          "photoUrl": "https://picsum.photos/seed/requiem-para-un-robot-cr1/200/200"
+        }
+      ],
+      "videos": [
+        {
+          "youtubeKey": "WhWc3b3KhnY",
+          "kind": "VIDEO_KIND_TRAILER"
+        }
+      ]
+    },
+    {
+      "id": "ceniza-y-sal",
+      "type": "MOVIE",
+      "category": "INDIE",
+      "title": "Ceniza y Sal",
+      "overview": "Una restauradora de murales regresa a su pueblo costero para enterrar a su madre y descubre, bajo capas de pintura, un retrato que reescribe su historia familiar.",
+      "releaseDate": "2026-06-18",
+      "posterUrl": "https://picsum.photos/seed/ceniza-y-sal/400/600",
+      "backdropUrl": "https://picsum.photos/seed/ceniza-y-sal-bg/1280/720",
+      "genres": [
+        "Drama",
+        "Festival"
+      ],
+      "originalLanguage": "Español",
+      "spokenLanguages": [
+        "Español"
+      ],
+      "images": [
+        {
+          "url": "https://picsum.photos/seed/ceniza-y-sal-g0/640/360",
+          "label": "Escena 01"
+        },
+        {
+          "url": "https://picsum.photos/seed/ceniza-y-sal-g1/640/360",
+          "label": "Set de rodaje"
+        },
+        {
+          "url": "https://picsum.photos/seed/ceniza-y-sal-g2/640/360",
+          "label": "Foto fija"
+        }
+      ],
+      "ratings": {
+        "tmdb": 7.8,
+        "imdb": "7.6",
+        "rottenTomatoes": "89%",
+        "metacritic": "81"
+      },
+      "availability": {
+        "platforms": [],
+        "networks": []
+      },
+      "cast": [
+        {
+          "name": "Irene Salas",
+          "role": "Marta",
+          "photoUrl": "https://picsum.photos/seed/cys-c0/200/200"
+        },
+        {
+          "name": "Tomás Vela",
+          "role": "Andrés",
+          "photoUrl": "https://picsum.photos/seed/cys-c1/200/200"
+        }
+      ],
+      "crew": [
+        {
+          "name": "Lucía Arenas",
+          "role": "Dirección"
+        },
+        {
+          "name": "Pablo Roca",
+          "role": "Guion"
+        }
+      ],
+      "videos": [
+        {
+          "youtubeKey": "eRsGyueVLvQ",
+          "kind": "VIDEO_KIND_TRAILER"
+        },
+        {
+          "youtubeKey": "R6MlUcmOul8"
+        }
+      ]
+    },
+    {
+      "id": "el-jardin-de-invierno",
+      "type": "MOVIE",
+      "category": "INDIE",
+      "title": "El Jardín de Invierno",
+      "overview": "Dos hermanas que no se hablan desde hace una década quedan atrapadas por una nevada en la casa de su infancia, donde un viejo invernadero guarda lo que ninguna se atreve a decir.",
+      "releaseDate": "2026-06-22",
+      "posterUrl": "https://picsum.photos/seed/el-jardin-de-invierno/400/600",
+      "backdropUrl": "https://picsum.photos/seed/el-jardin-de-invierno-bg/1280/720",
+      "genres": [
+        "Drama",
+        "Arthouse"
+      ],
+      "originalLanguage": "Francés",
+      "spokenLanguages": [
+        "Francés",
+        "Español"
+      ],
+      "images": [
+        {
+          "url": "https://picsum.photos/seed/ejdi-g0/640/360",
+          "label": "Escena 01"
+        },
+        {
+          "url": "https://picsum.photos/seed/ejdi-g1/640/360",
+          "label": "Invernadero"
+        },
+        {
+          "url": "https://picsum.photos/seed/ejdi-g2/640/360",
+          "label": "Detrás de cámaras"
+        }
+      ],
+      "ratings": {
+        "tmdb": 8.7,
+        "imdb": "8.5",
+        "rottenTomatoes": "95%",
+        "metacritic": "90"
+      },
+      "availability": {
+        "platforms": [],
+        "networks": []
+      },
+      "cast": [
+        {
+          "name": "Hélène Bovary",
+          "role": "Claire",
+          "photoUrl": "https://picsum.photos/seed/ejdi-c0/200/200"
+        },
+        {
+          "name": "Margaux Pena",
+          "role": "Sophie",
+          "photoUrl": "https://picsum.photos/seed/ejdi-c1/200/200"
+        }
+      ],
+      "crew": [
+        {
+          "name": "Étienne Marchal",
+          "role": "Dirección"
+        },
+        {
+          "name": "Camille Roux",
+          "role": "Fotografía"
+        }
+      ],
+      "videos": [
+        {
+          "youtubeKey": "Y-rmzh0PI3c",
+          "kind": "VIDEO_KIND_TRAILER"
+        },
+        {
+          "youtubeKey": "WhWc3b3KhnY"
+        }
+      ]
+    },
+    {
+      "id": "ruido-blanco",
+      "type": "MOVIE",
+      "category": "INDIE",
+      "title": "Ruido Blanco",
+      "overview": "Un técnico de sonido obsesionado con una grabación imposible empieza a oír, entre el ruido, una voz que parece responderle.",
+      "releaseDate": "2026-07-09",
+      "posterUrl": "https://picsum.photos/seed/ruido-blanco/400/600",
+      "backdropUrl": "https://picsum.photos/seed/ruido-blanco-bg/1280/720",
+      "genres": [
+        "Misterio",
+        "Indie"
+      ],
+      "originalLanguage": "Español",
+      "spokenLanguages": [
+        "Español"
+      ],
+      "images": [
+        {
+          "url": "https://picsum.photos/seed/ruido-blanco-g0/640/360",
+          "label": "Escena 01"
+        },
+        {
+          "url": "https://picsum.photos/seed/ruido-blanco-g1/640/360",
+          "label": "Estudio"
+        }
+      ],
+      "ratings": {
+        "tmdb": 6.9,
+        "imdb": "6.7",
+        "rottenTomatoes": "74%",
+        "metacritic": "68"
+      },
+      "availability": {
+        "platforms": [],
+        "networks": []
+      },
+      "cast": [
+        {
+          "name": "Diego Ferrer",
+          "role": "El técnico",
+          "photoUrl": "https://picsum.photos/seed/rb-c0/200/200"
+        }
+      ],
+      "crew": [
+        {
+          "name": "Nadia Ortega",
+          "role": "Dirección"
+        }
+      ],
+      "videos": [
+        {
+          "youtubeKey": "SkVqJ1SGeL0",
+          "kind": "VIDEO_KIND_TRAILER"
+        },
+        {
+          "youtubeKey": "aqz-KE-bpKQ"
+        }
+      ]
+    },
+    {
+      "id": "marea-alta",
+      "type": "MOVIE",
+      "category": "CINE",
+      "title": "Marea Alta",
+      "overview": "Un buzo de rescate y su hija enfrentan la peor tormenta en décadas para salvar a una tripulación atrapada.",
+      "releaseDate": "2026-06-10",
+      "posterUrl": "https://picsum.photos/seed/marea-alta/400/600",
+      "backdropUrl": "https://picsum.photos/seed/marea-alta-bg/1280/720",
+      "genres": [
+        "Acción",
+        "Aventura"
+      ],
+      "originalLanguage": "Español",
+      "spokenLanguages": [
+        "Español"
+      ],
+      "images": [
+        {
+          "url": "https://picsum.photos/seed/marea-alta-g0/640/360",
+          "label": "Escena 01"
+        },
+        {
+          "url": "https://picsum.photos/seed/marea-alta-g1/640/360",
+          "label": "Set de rodaje"
+        },
+        {
+          "url": "https://picsum.photos/seed/marea-alta-g2/640/360",
+          "label": "Foto fija"
+        }
+      ],
+      "ratings": {
+        "tmdb": 7.9,
+        "imdb": "7.7",
+        "rottenTomatoes": "86%",
+        "metacritic": "78"
+      },
+      "availability": {
+        "platforms": [],
+        "networks": []
+      },
+      "cast": [
+        {
+          "name": "Bruno Lara",
+          "role": "Capitán Rey",
+          "photoUrl": "https://picsum.photos/seed/ma-0/200/200"
+        },
+        {
+          "name": "Sofía Cano",
+          "role": "Lía",
+          "photoUrl": "https://picsum.photos/seed/ma-1/200/200"
+        }
+      ],
+      "crew": [
+        {
+          "name": "Rafael Quintero",
+          "role": "Dirección"
+        },
+        {
+          "name": "Mara Beltrán",
+          "role": "Guion"
+        }
+      ],
+      "saga": {
+        "name": "Marea",
+        "items": [
+          {
+            "title": "Marea Alta",
+            "year": "2026",
+            "posterUrl": "https://picsum.photos/seed/Marea-0/300/450"
+          },
+          {
+            "title": "Marea Negra",
+            "year": "2026",
+            "posterUrl": "https://picsum.photos/seed/Marea-1/300/450"
+          }
+        ]
+      },
+      "videos": [
+        {
+          "youtubeKey": "R6MlUcmOul8",
+          "kind": "VIDEO_KIND_TRAILER"
+        },
+        {
+          "youtubeKey": "SkVqJ1SGeL0"
+        }
+      ]
+    },
+    {
+      "id": "marea-negra",
+      "type": "MOVIE",
+      "category": "CINE",
+      "title": "Marea Negra",
+      "overview": "Meses después, un derrame petrolero obliga al equipo de rescate a una misión imposible bajo el mar.",
+      "releaseDate": "2026-07-17",
+      "posterUrl": "https://picsum.photos/seed/marea-negra/400/600",
+      "backdropUrl": "https://picsum.photos/seed/marea-negra-bg/1280/720",
+      "genres": [
+        "Acción",
+        "Thriller"
+      ],
+      "originalLanguage": "Español",
+      "spokenLanguages": [
+        "Español"
+      ],
+      "images": [
+        {
+          "url": "https://picsum.photos/seed/marea-negra-g0/640/360",
+          "label": "Escena 01"
+        },
+        {
+          "url": "https://picsum.photos/seed/marea-negra-g1/640/360",
+          "label": "Set de rodaje"
+        },
+        {
+          "url": "https://picsum.photos/seed/marea-negra-g2/640/360",
+          "label": "Foto fija"
+        }
+      ],
+      "ratings": {
+        "tmdb": 8.1,
+        "imdb": "7.9",
+        "rottenTomatoes": "88%",
+        "metacritic": "80"
+      },
+      "availability": {
+        "platforms": [],
+        "networks": []
+      },
+      "cast": [
+        {
+          "name": "Bruno Lara",
+          "role": "Capitán Rey",
+          "photoUrl": "https://picsum.photos/seed/ma-0/200/200"
+        },
+        {
+          "name": "Diana Roel",
+          "role": "Inés",
+          "photoUrl": "https://picsum.photos/seed/mn-1/200/200"
+        }
+      ],
+      "crew": [
+        {
+          "name": "Rafael Quintero",
+          "role": "Dirección"
+        },
+        {
+          "name": "Mara Beltrán",
+          "role": "Guion"
+        }
+      ],
+      "saga": {
+        "name": "Marea",
+        "items": [
+          {
+            "title": "Marea Alta",
+            "year": "2026",
+            "posterUrl": "https://picsum.photos/seed/Marea-0/300/450"
+          },
+          {
+            "title": "Marea Negra",
+            "year": "2026",
+            "posterUrl": "https://picsum.photos/seed/Marea-1/300/450"
+          }
+        ]
+      },
+      "videos": [
+        {
+          "youtubeKey": "eRsGyueVLvQ",
+          "kind": "VIDEO_KIND_TRAILER"
+        },
+        {
+          "youtubeKey": "WhWc3b3KhnY"
+        }
+      ]
+    },
+    {
+      "id": "sal-de-plata",
+      "type": "MOVIE",
+      "category": "CINE",
+      "title": "Sal de Plata",
+      "overview": "Una fotógrafa documenta las salinas del norte y se obsesiona con un paisaje que cambia cada noche.",
+      "releaseDate": "2026-06-26",
+      "posterUrl": "https://picsum.photos/seed/sal-de-plata/400/600",
+      "backdropUrl": "https://picsum.photos/seed/sal-de-plata-bg/1280/720",
+      "genres": [
+        "Drama"
+      ],
+      "originalLanguage": "Español",
+      "spokenLanguages": [
+        "Español"
+      ],
+      "images": [
+        {
+          "url": "https://picsum.photos/seed/sal-de-plata-g0/640/360",
+          "label": "Escena 01"
+        },
+        {
+          "url": "https://picsum.photos/seed/sal-de-plata-g1/640/360",
+          "label": "Set de rodaje"
+        },
+        {
+          "url": "https://picsum.photos/seed/sal-de-plata-g2/640/360",
+          "label": "Foto fija"
+        }
+      ],
+      "ratings": {
+        "tmdb": 8.3,
+        "imdb": "8.1",
+        "rottenTomatoes": "92%",
+        "metacritic": "85"
+      },
+      "availability": {
+        "platforms": [],
+        "networks": []
+      },
+      "cast": [
+        {
+          "name": "Irene Salas",
+          "role": "Nora",
+          "photoUrl": "https://picsum.photos/seed/sp-0/200/200"
+        }
+      ],
+      "crew": [
+        {
+          "name": "Lucía Arenas",
+          "role": "Dirección"
+        },
+        {
+          "name": "Pablo Roca",
+          "role": "Guion"
+        }
+      ],
+      "videos": [
+        {
+          "youtubeKey": "Y-rmzh0PI3c",
+          "kind": "VIDEO_KIND_TRAILER"
+        },
+        {
+          "youtubeKey": "aqz-KE-bpKQ"
+        }
+      ]
+    },
+    {
+      "id": "orbita-cero",
+      "type": "MOVIE",
+      "category": "STREAMING",
+      "title": "Órbita Cero",
+      "overview": "Tres astronautas varados deben confiar en una IA que ha empezado a mentir.",
+      "releaseDate": "2026-06-03",
+      "posterUrl": "https://picsum.photos/seed/orbita-cero/400/600",
+      "backdropUrl": "https://picsum.photos/seed/orbita-cero-bg/1280/720",
+      "genres": [
+        "Ciencia ficción",
+        "Thriller"
+      ],
+      "originalLanguage": "Inglés",
+      "spokenLanguages": [
+        "Inglés",
+        "Español"
+      ],
+      "images": [
+        {
+          "url": "https://picsum.photos/seed/orbita-cero-g0/640/360",
+          "label": "Escena 01"
+        },
+        {
+          "url": "https://picsum.photos/seed/orbita-cero-g1/640/360",
+          "label": "Set de rodaje"
+        }
+      ],
+      "ratings": {
+        "tmdb": 7.4,
+        "imdb": "7.2",
+        "rottenTomatoes": "79%",
+        "metacritic": "71"
+      },
+      "availability": {
+        "platforms": [
+          "Netflix"
+        ],
+        "networks": []
+      },
+      "cast": [
+        {
+          "name": "Owen Pike",
+          "role": "Cmdr. Hale",
+          "photoUrl": "https://picsum.photos/seed/oc-0/200/200"
+        }
+      ],
+      "crew": [
+        {
+          "name": "Greta Lindqvist",
+          "role": "Dirección"
+        }
+      ],
+      "videos": [
+        {
+          "youtubeKey": "R6MlUcmOul8",
+          "kind": "VIDEO_KIND_TRAILER"
+        },
+        {
+          "youtubeKey": "SkVqJ1SGeL0"
+        }
+      ]
+    },
+    {
+      "id": "dos-veranos",
+      "type": "SERIES",
+      "category": "STREAMING",
+      "title": "Dos Veranos",
+      "overview": "Dos adolescentes se reencuentran cada verano en un pueblo que guarda un secreto compartido.",
+      "releaseDate": "2026-06-14",
+      "posterUrl": "https://picsum.photos/seed/dos-veranos/400/600",
+      "backdropUrl": "https://picsum.photos/seed/dos-veranos-bg/1280/720",
+      "genres": [
+        "Drama",
+        "Romance"
+      ],
+      "originalLanguage": "Español",
+      "spokenLanguages": [
+        "Español"
+      ],
+      "images": [
+        {
+          "url": "https://picsum.photos/seed/dos-veranos-g0/640/360",
+          "label": "Escena 01"
+        },
+        {
+          "url": "https://picsum.photos/seed/dos-veranos-g1/640/360",
+          "label": "Set de rodaje"
+        }
+      ],
+      "ratings": {
+        "tmdb": 7.6,
+        "imdb": "7.5",
+        "rottenTomatoes": "83%",
+        "metacritic": "77"
+      },
+      "availability": {
+        "platforms": [
+          "Max"
+        ],
+        "networks": []
+      },
+      "cast": [
+        {
+          "name": "Lía Fuentes",
+          "role": "Sara",
+          "photoUrl": "https://picsum.photos/seed/dv-0/200/200"
+        },
+        {
+          "name": "Marco Díaz",
+          "role": "Tomás",
+          "photoUrl": "https://picsum.photos/seed/dv-1/200/200"
+        }
+      ],
+      "crew": [
+        {
+          "name": "Helena Pardo",
+          "role": "Dirección"
+        }
+      ],
+      "videos": [
+        {
+          "youtubeKey": "Y-rmzh0PI3c",
+          "kind": "VIDEO_KIND_TRAILER"
+        },
+        {
+          "youtubeKey": "aqz-KE-bpKQ"
+        }
+      ]
+    },
+    {
+      "id": "la-red-fria",
+      "type": "SERIES",
+      "category": "STREAMING",
+      "title": "La Red Fría",
+      "overview": "Una analista descubre que un atentado fue ensayado en línea años antes de ocurrir.",
+      "releaseDate": "2026-07-02",
+      "posterUrl": "https://picsum.photos/seed/la-red-fria/400/600",
+      "backdropUrl": "https://picsum.photos/seed/la-red-fria-bg/1280/720",
+      "genres": [
+        "Crimen",
+        "Thriller"
+      ],
+      "originalLanguage": "Inglés",
+      "spokenLanguages": [
+        "Inglés"
+      ],
+      "images": [
+        {
+          "url": "https://picsum.photos/seed/la-red-fria-g0/640/360",
+          "label": "Escena 01"
+        },
+        {
+          "url": "https://picsum.photos/seed/la-red-fria-g1/640/360",
+          "label": "Set de rodaje"
+        },
+        {
+          "url": "https://picsum.photos/seed/la-red-fria-g2/640/360",
+          "label": "Foto fija"
+        }
+      ],
+      "ratings": {
+        "tmdb": 8.0,
+        "imdb": "7.8",
+        "rottenTomatoes": "85%",
+        "metacritic": "79"
+      },
+      "availability": {
+        "platforms": [
+          "Prime Video"
+        ],
+        "networks": []
+      },
+      "cast": [
+        {
+          "name": "Nadia Khan",
+          "role": "Ava",
+          "photoUrl": "https://picsum.photos/seed/lrf-0/200/200"
+        }
+      ],
+      "crew": [
+        {
+          "name": "Sam Oduya",
+          "role": "Dirección"
+        }
+      ],
+      "videos": [
+        {
+          "youtubeKey": "R6MlUcmOul8",
+          "kind": "VIDEO_KIND_TRAILER"
+        },
+        {
+          "youtubeKey": "SkVqJ1SGeL0"
+        }
+      ]
+    },
+    {
+      "id": "cocina-de-medianoche",
+      "type": "SERIES",
+      "category": "STREAMING",
+      "title": "Cocina de Medianoche",
+      "overview": "En un restaurante que solo abre de noche, cada plato desentierra una historia de la ciudad.",
+      "releaseDate": "2026-07-21",
+      "posterUrl": "https://picsum.photos/seed/cocina-de-medianoche/400/600",
+      "backdropUrl": "https://picsum.photos/seed/cocina-de-medianoche-bg/1280/720",
+      "genres": [
+        "Drama"
+      ],
+      "originalLanguage": "Japonés",
+      "spokenLanguages": [
+        "Japonés",
+        "Español"
+      ],
+      "images": [
+        {
+          "url": "https://picsum.photos/seed/cocina-de-medianoche-g0/640/360",
+          "label": "Escena 01"
+        },
+        {
+          "url": "https://picsum.photos/seed/cocina-de-medianoche-g1/640/360",
+          "label": "Set de rodaje"
+        }
+      ],
+      "ratings": {
+        "tmdb": 7.1,
+        "imdb": "7.0",
+        "rottenTomatoes": "76%",
+        "metacritic": "70"
+      },
+      "availability": {
+        "platforms": [
+          "Netflix"
+        ],
+        "networks": []
+      },
+      "cast": [
+        {
+          "name": "Ken Aoki",
+          "role": "El chef",
+          "photoUrl": "https://picsum.photos/seed/cm-0/200/200"
+        }
+      ],
+      "crew": [
+        {
+          "name": "Yuki Mori",
+          "role": "Dirección"
+        }
+      ],
+      "videos": [
+        {
+          "youtubeKey": "aqz-KE-bpKQ",
+          "kind": "VIDEO_KIND_TRAILER"
+        },
+        {
+          "youtubeKey": "Y-rmzh0PI3c"
+        }
+      ]
+    },
+    {
+      "id": "frecuencia-norte",
+      "type": "SERIES",
+      "category": "TV",
+      "title": "Frecuencia Norte",
+      "overview": "Una radio comunitaria se vuelve la única voz contra una empresa que quiere borrar el pueblo.",
+      "releaseDate": "2026-06-20",
+      "posterUrl": "https://picsum.photos/seed/frecuencia-norte/400/600",
+      "backdropUrl": "https://picsum.photos/seed/frecuencia-norte-bg/1280/720",
+      "genres": [
+        "Drama"
+      ],
+      "originalLanguage": "Español",
+      "spokenLanguages": [
+        "Español"
+      ],
+      "images": [
+        {
+          "url": "https://picsum.photos/seed/frecuencia-norte-g0/640/360",
+          "label": "Escena 01"
+        },
+        {
+          "url": "https://picsum.photos/seed/frecuencia-norte-g1/640/360",
+          "label": "Set de rodaje"
+        }
+      ],
+      "ratings": {
+        "tmdb": 7.3,
+        "imdb": "7.1",
+        "rottenTomatoes": "80%",
+        "metacritic": "73"
+      },
+      "availability": {
+        "platforms": [],
+        "networks": [
+          "Canal Once"
+        ]
+      },
+      "cast": [
+        {
+          "name": "Rosa Méndez",
+          "role": "Carmen",
+          "photoUrl": "https://picsum.photos/seed/fn-0/200/200"
+        }
+      ],
+      "crew": [
+        {
+          "name": "Iván Solís",
+          "role": "Dirección"
+        }
+      ],
+      "videos": [
+        {
+          "youtubeKey": "R6MlUcmOul8",
+          "kind": "VIDEO_KIND_TRAILER"
+        },
+        {
+          "youtubeKey": "SkVqJ1SGeL0"
+        }
+      ]
+    },
+    {
+      "id": "expediente-9",
+      "type": "SERIES",
+      "category": "TV",
+      "title": "Expediente 9",
+      "overview": "Detectives reabren nueve casos cerrados que comparten un mismo símbolo.",
+      "releaseDate": "2026-07-06",
+      "posterUrl": "https://picsum.photos/seed/expediente-9/400/600",
+      "backdropUrl": "https://picsum.photos/seed/expediente-9-bg/1280/720",
+      "genres": [
+        "Crimen",
+        "Misterio"
+      ],
+      "originalLanguage": "Español",
+      "spokenLanguages": [
+        "Español"
+      ],
+      "images": [
+        {
+          "url": "https://picsum.photos/seed/expediente-9-g0/640/360",
+          "label": "Escena 01"
+        },
+        {
+          "url": "https://picsum.photos/seed/expediente-9-g1/640/360",
+          "label": "Set de rodaje"
+        },
+        {
+          "url": "https://picsum.photos/seed/expediente-9-g2/640/360",
+          "label": "Foto fija"
+        }
+      ],
+      "ratings": {
+        "tmdb": 7.7,
+        "imdb": "7.6",
+        "rottenTomatoes": "82%",
+        "metacritic": "76"
+      },
+      "availability": {
+        "platforms": [],
+        "networks": [
+          "TV Azteca"
+        ]
+      },
+      "cast": [
+        {
+          "name": "Hugo Ramírez",
+          "role": "Det. Vela",
+          "photoUrl": "https://picsum.photos/seed/e9-0/200/200"
+        }
+      ],
+      "crew": [
+        {
+          "name": "Lucía Arenas",
+          "role": "Dirección"
+        }
+      ],
+      "videos": [
+        {
+          "youtubeKey": "aqz-KE-bpKQ",
+          "kind": "VIDEO_KIND_TRAILER"
+        },
+        {
+          "youtubeKey": "Y-rmzh0PI3c"
+        }
+      ]
+    },
+    {
+      "id": "el-peso-del-agua",
+      "type": "MOVIE",
+      "category": "CINE",
+      "title": "El Peso del Agua",
+      "overview": "Un ingeniero debe decidir si abrir una presa que salvará a una ciudad y hundirá a otra.",
+      "releaseDate": "2026-07-12",
+      "posterUrl": "https://picsum.photos/seed/el-peso-del-agua/400/600",
+      "backdropUrl": "https://picsum.photos/seed/el-peso-del-agua-bg/1280/720",
+      "genres": [
+        "Drama",
+        "Thriller"
+      ],
+      "originalLanguage": "Español",
+      "spokenLanguages": [
+        "Español"
+      ],
+      "images": [
+        {
+          "url": "https://picsum.photos/seed/el-peso-del-agua-g0/640/360",
+          "label": "Escena 01"
+        },
+        {
+          "url": "https://picsum.photos/seed/el-peso-del-agua-g1/640/360",
+          "label": "Set de rodaje"
+        },
+        {
+          "url": "https://picsum.photos/seed/el-peso-del-agua-g2/640/360",
+          "label": "Foto fija"
+        }
+      ],
+      "ratings": {
+        "tmdb": 8.5,
+        "imdb": "8.3",
+        "rottenTomatoes": "93%",
+        "metacritic": "88"
+      },
+      "availability": {
+        "platforms": [],
+        "networks": []
+      },
+      "cast": [
+        {
+          "name": "Andrés Gil",
+          "role": "Mateo",
+          "photoUrl": "https://picsum.photos/seed/epa-0/200/200"
+        },
+        {
+          "name": "Sofía Cano",
+          "role": "Elsa",
+          "photoUrl": "https://picsum.photos/seed/ma-1/200/200"
+        }
+      ],
+      "crew": [
+        {
+          "name": "Rafael Quintero",
+          "role": "Dirección"
+        }
+      ],
+      "videos": [
+        {
+          "youtubeKey": "SkVqJ1SGeL0",
+          "kind": "VIDEO_KIND_TRAILER"
+        },
+        {
+          "youtubeKey": "R6MlUcmOul8"
+        }
+      ]
+    },
+    {
+      "id": "polvo-rojo",
+      "type": "MOVIE",
+      "category": "CINE",
+      "title": "Polvo Rojo",
+      "overview": "Western contemporáneo: una alguacil persigue a su hermano por el desierto que los crió.",
+      "releaseDate": "2026-06-29",
+      "posterUrl": "https://picsum.photos/seed/polvo-rojo/400/600",
+      "backdropUrl": "https://picsum.photos/seed/polvo-rojo-bg/1280/720",
+      "genres": [
+        "Western",
+        "Drama"
+      ],
+      "originalLanguage": "Español",
+      "spokenLanguages": [
+        "Español"
+      ],
+      "images": [
+        {
+          "url": "https://picsum.photos/seed/polvo-rojo-g0/640/360",
+          "label": "Escena 01"
+        },
+        {
+          "url": "https://picsum.photos/seed/polvo-rojo-g1/640/360",
+          "label": "Set de rodaje"
+        }
+      ],
+      "ratings": {
+        "tmdb": 7.2,
+        "imdb": "7.0",
+        "rottenTomatoes": "75%",
+        "metacritic": "69"
+      },
+      "availability": {
+        "platforms": [],
+        "networks": []
+      },
+      "cast": [
+        {
+          "name": "Vera Luna",
+          "role": "Alguacil Cruz",
+          "photoUrl": "https://picsum.photos/seed/pr-0/200/200"
+        }
+      ],
+      "crew": [
+        {
+          "name": "Diego Morales",
+          "role": "Dirección"
+        }
+      ],
+      "videos": [
+        {
+          "youtubeKey": "R6MlUcmOul8",
+          "kind": "VIDEO_KIND_TRAILER"
+        },
+        {
+          "youtubeKey": "SkVqJ1SGeL0"
+        }
+      ]
+    },
+    {
+      "id": "invierno-en-paris",
+      "type": "MOVIE",
+      "category": "INDIE",
+      "title": "Invierno en París",
+      "overview": "Un músico callejero y una traductora pasan una noche recorriendo una ciudad que se vacía.",
+      "releaseDate": "2026-07-25",
+      "posterUrl": "https://picsum.photos/seed/invierno-en-paris/400/600",
+      "backdropUrl": "https://picsum.photos/seed/invierno-en-paris-bg/1280/720",
+      "genres": [
+        "Drama",
+        "Romance"
+      ],
+      "originalLanguage": "Francés",
+      "spokenLanguages": [
+        "Francés",
+        "Español"
+      ],
+      "images": [
+        {
+          "url": "https://picsum.photos/seed/invierno-en-paris-g0/640/360",
+          "label": "Escena 01"
+        },
+        {
+          "url": "https://picsum.photos/seed/invierno-en-paris-g1/640/360",
+          "label": "Set de rodaje"
+        }
+      ],
+      "ratings": {
+        "tmdb": 8.2,
+        "imdb": "8.0",
+        "rottenTomatoes": "90%",
+        "metacritic": "84"
+      },
+      "availability": {
+        "platforms": [],
+        "networks": []
+      },
+      "cast": [
+        {
+          "name": "Margaux Pena",
+          "role": "Lou",
+          "photoUrl": "https://picsum.photos/seed/ejdi-c1/200/200"
+        }
+      ],
+      "crew": [
+        {
+          "name": "Étienne Marchal",
+          "role": "Dirección"
+        }
+      ],
+      "videos": [
+        {
+          "youtubeKey": "WhWc3b3KhnY",
+          "kind": "VIDEO_KIND_TRAILER"
+        },
+        {
+          "youtubeKey": "eRsGyueVLvQ"
+        }
+      ]
+    }
+  ]
+}

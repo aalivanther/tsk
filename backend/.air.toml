@@ -1,0 +1,57 @@
+# .air.toml — configuración de air para recarga en caliente (hot reload) del backend Go.
+# En español: air vigila los archivos del proyecto mientras desarrollas; cuando guardas
+# un cambio en un archivo .go, vuelve a compilar el servidor y lo reinicia solo. Así no
+# tienes que parar y arrancar el backend a mano cada vez que editas código.
+
+# root es la carpeta base que air toma como referencia (el directorio del backend).
+root = "."
+# tmp_dir es donde air deja el binario compilado y archivos temporales.
+tmp_dir = "tmp"
+
+# --- Sección de compilación ---
+# En español: aquí se define cómo air construye y ejecuta la aplicación tras cada cambio.
+[build]
+  # cmd es el comando exacto de compilación: compila el paquete del servidor (cmd/api)
+  # y deja el binario en ./tmp/api.
+  cmd = "go build -o ./tmp/api ./cmd/api"
+  # bin es el binario que air ejecuta después de compilar correctamente.
+  bin = "./tmp/api"
+  # full_bin es el comando completo de arranque; se deja explícito por claridad.
+  full_bin = "./tmp/api"
+  # delay son los milisegundos que air espera tras detectar un cambio antes de recompilar,
+  # para agrupar varios guardados seguidos en una sola reconstrucción.
+  delay = 1000
+  # include_ext son las extensiones de archivo que disparan una recompilación.
+  include_ext = ["go"]
+  # exclude_dir son las carpetas que air NO vigila (no aportan código fuente a observar).
+  # Se excluye gen para no recompilar en bucle si el código generado cambia, y tmp/vendor
+  # por ser artefactos.
+  exclude_dir = ["tmp", "vendor", "gen"]
+  # exclude_regex evita vigilar archivos de prueba, que no forman parte del binario.
+  exclude_regex = ["_test\\.go"]
+  # stop_on_error mantiene corriendo la última versión buena si la compilación falla,
+  # para no quedarte sin servidor mientras arreglas el error.
+  stop_on_error = true
+  # send_interrupt pide al proceso que se detenga con una señal limpia antes de matarlo,
+  # respetando el apagado ordenado del servidor.
+  send_interrupt = true
+  # kill_delay es el plazo (en nanosegundos) que air espera tras la señal antes de forzar
+  # el cierre del proceso anterior.
+  kill_delay = 2000000000
+
+# --- Sección de colores en consola ---
+# En español: ajustes cosméticos para que la salida de air sea fácil de leer.
+[color]
+  main = "magenta"
+  build = "yellow"
+  runner = "green"
+
+# --- Sección de registro ---
+# En español: muestra la hora en cada línea de log de air para seguir la cronología.
+[log]
+  time = true
+
+# --- Sección varios ---
+# En español: al cerrar air (Ctrl+C), borra la carpeta temporal para no dejar basura.
+[misc]
+  clean_on_exit = true

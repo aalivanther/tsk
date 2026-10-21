@@ -1,0 +1,155 @@
+// Archivo: auth.proto — Contrato Protobuf del servicio de AUTENTICACIÓN (Fase BETA).
+// En español: define TODO el ciclo de vida de una cuenta: registrarse, iniciar sesión, consultar
+// "quién soy", cerrar sesión, cambiar la contraseña, pedir un restablecimiento cuando se olvidó y
+// borrar la cuenta por completo. El login es OPCIONAL en el producto: se puede explorar sin cuenta;
+// la cuenta sirve para tener un perfil propio sincronizado entre dispositivos.
+//
+// Cómo funcionan las sesiones (cambió en la Fase BETA): el servidor emite un token OPACO y aleatorio,
+// guarda solo su huella en la base de datos y lo entrega por UN ÚNICO camino — la cookie
+// `tsk_session`, marcada de forma que el JavaScript de la página no puede leerla ni escribirla.
+//
+// Dos decisiones que conviene entender juntas:
+//
+//   1. La sesión EXISTE en el servidor, así que se puede REVOCAR de verdad. Cerrar sesión, cambiar la
+//      contraseña o borrar la cuenta invalidan los accesos abiertos en el acto. Con el esquema
+//      anterior —un token firmado que el servidor no guardaba— eso era sencillamente imposible: una
+//      credencial robada valía treinta días aunque su dueño "cerrara sesión".
+//
+//   2. El token NO viaja además en el cuerpo de la respuesta. Lo hizo durante un tiempo, para que el
+//      frontend pudiera guardarlo y reenviarlo, y eso obligaba a tenerlo en un sitio que cualquier
+//      script de la página podía leer. Desde que el navegador llama al backend a través de la propia
+//      dirección de la web, la cookie llega sola y ese rodeo sobra. Un segundo camino que ya nadie usa
+//      no es compatibilidad: es una puerta más que vigilar.
+
+syntax = "proto3";
+
+package mdm7mo.auth.v1;
+
+// AuthService es la "ventanilla" de cuentas del backend.
+service AuthService {
+  // Register crea una cuenta nueva (email + contraseña) y devuelve la sesión (token + usuario).
+  rpc Register(RegisterRequest) returns (AuthResponse);
+
+  // Login valida credenciales y devuelve la sesión (token + usuario).
+  rpc Login(LoginRequest) returns (AuthResponse);
+
+  // Me devuelve el usuario de la sesión actual (a partir de la cookie o del header Authorization).
+  // En español: lo usa el frontend al cargar para RESTAURAR la sesión si hay una abierta.
+  rpc Me(MeRequest) returns (MeResponse);
+
+  // Logout cierra la sesión ACTUAL: borra su registro en el servidor y vacía la cookie.
+  // En español: a partir de aquí el token usado deja de valer para siempre, aunque alguien lo copie.
+  rpc Logout(LogoutRequest) returns (LogoutResponse);
+
+  // ChangePassword cambia la contraseña de la sesión actual exigiendo la contraseña vigente.
+  // En español: además de cambiarla, CIERRA todas las sesiones de la cuenta (incluida la que hizo el
+  // cambio), porque el motivo típico de cambiar contraseña es "creo que alguien más entró".
+  rpc ChangePassword(ChangePasswordRequest) returns (ChangePasswordResponse);
+
+  // DeleteAccount borra la cuenta y todo lo asociado (perfil y sesiones) exigiendo la contraseña.
+  // En español: es el derecho de CANCELACIÓN del aviso de privacidad; el borrado es definitivo.
+  rpc DeleteAccount(DeleteAccountRequest) returns (DeleteAccountResponse);
+
+  // RequestPasswordReset inicia el restablecimiento de contraseña de quien olvidó la suya.
+  // En español: responde SIEMPRE lo mismo exista o no la cuenta, para no delatar qué emails están
+  // registrados. Si existe, se emite un token temporal y se entrega por el canal configurado.
+  rpc RequestPasswordReset(RequestPasswordResetRequest) returns (RequestPasswordResetResponse);
+
+  // ResetPassword consume el token de restablecimiento y fija la contraseña nueva.
+  // En español: el token es de UN SOLO USO y caduca; al usarlo se cierran todas las sesiones abiertas.
+  rpc ResetPassword(ResetPasswordRequest) returns (ResetPasswordResponse);
+}
+
+// User es la representación pública de una cuenta (sin la contraseña, jamás).
+message User {
+  // id es el identificador único de la cuenta (opaco, generado por el servidor).
+  string id = 1;
+  // email es el correo con el que se registró (en minúsculas, normalizado).
+  string email = 2;
+  // display_name es el nombre visible elegido al registrarse (puede repetirse entre cuentas).
+  string display_name = 3;
+  // created_at es la fecha de creación en formato ISO-8601 (UTC).
+  string created_at = 4;
+}
+
+// RegisterRequest son los datos para crear una cuenta.
+message RegisterRequest {
+  string email = 1;
+  string password = 2;
+  string display_name = 3;
+  // invite_code es el código de invitación de la alpha cerrada, con formato "TSK-XXXX-XXXX".
+  // En español: mientras la beta sea por invitación (bandera REQUIRE_INVITE del servidor), sin un
+  // código válido y sin usar no se puede crear cuenta. Cuando la beta se abra al público, el
+  // servidor deja de exigirlo y este campo se ignora. Se valida y se consume en la MISMA operación
+  // que crea la cuenta, para que dos registros simultáneos con el mismo código no puedan entrar los dos.
+  string invite_code = 4;
+}
+
+// LoginRequest son las credenciales para iniciar sesión.
+message LoginRequest {
+  string email = 1;
+  string password = 2;
+}
+
+// AuthResponse es la sesión emitida tras registrarse o iniciar sesión.
+message AuthResponse {
+  // El campo 1 llevaba el token de sesión en claro. Se retiró a propósito: la sesión viaja ahora
+  // exclusivamente en una cookie que el JavaScript de la página no puede leer, así que devolver el
+  // mismo valor por un segundo camino solo servía para que alguien pudiera copiarlo. El número queda
+  // RESERVADO para que nunca se reutilice y una versión antigua del cliente no lea basura en su lugar.
+  reserved 1;
+  reserved "token";
+  // user es la cuenta autenticada (datos públicos).
+  User user = 2;
+}
+
+// MeRequest no lleva campos: la identidad sale de la cookie de sesión o del header Authorization.
+message MeRequest {}
+
+// MeResponse devuelve el usuario de la sesión actual.
+message MeResponse {
+  User user = 1;
+}
+
+// LogoutRequest no lleva campos: se cierra la sesión con la que se hizo la llamada.
+message LogoutRequest {}
+
+// LogoutResponse no lleva campos: si la llamada no devolvió error, la sesión ya está cerrada.
+message LogoutResponse {}
+
+// ChangePasswordRequest lleva la contraseña vigente (prueba de identidad) y la nueva.
+message ChangePasswordRequest {
+  string current_password = 1;
+  string new_password = 2;
+}
+
+// ChangePasswordResponse no lleva campos. Ojo: tras un cambio de contraseña TODAS las sesiones
+// quedan cerradas, así que el cliente debe volver a iniciar sesión con la contraseña nueva.
+message ChangePasswordResponse {}
+
+// DeleteAccountRequest exige la contraseña como confirmación de una acción irreversible.
+message DeleteAccountRequest {
+  string password = 1;
+}
+
+// DeleteAccountResponse no lleva campos: sin error significa que la cuenta ya no existe.
+message DeleteAccountResponse {}
+
+// RequestPasswordResetRequest lleva el email de la cuenta que olvidó su contraseña.
+message RequestPasswordResetRequest {
+  string email = 1;
+}
+
+// RequestPasswordResetResponse no lleva campos a propósito: responder siempre lo mismo (exista o no
+// la cuenta) es lo que impide usar esta llamada para averiguar qué emails están registrados.
+message RequestPasswordResetResponse {}
+
+// ResetPasswordRequest lleva el token de restablecimiento recibido y la contraseña nueva.
+message ResetPasswordRequest {
+  string reset_token = 1;
+  string new_password = 2;
+}
+
+// ResetPasswordResponse no lleva campos: sin error, la contraseña nueva ya está activa y todas las
+// sesiones anteriores quedaron cerradas.
+message ResetPasswordResponse {}

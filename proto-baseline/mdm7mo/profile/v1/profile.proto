@@ -1,0 +1,73 @@
+// Archivo: profile.proto — Contrato Protobuf del servicio de PERFIL (Fase BETA).
+// En español: el perfil es todo lo que el usuario ha ido acumulando en la aplicación: su lista de
+// "quiero ver", lo que ya vio, sus reseñas, sus ajustes y su actividad reciente. Hasta ahora vivía
+// SOLO en el navegador (localStorage), así que cambiar de teléfono a computadora significaba empezar
+// de cero. Este servicio lo guarda en el servidor, atado a la cuenta.
+//
+// Por qué un DOCUMENTO entero y no una llamada por cada acción: el perfil pesa muy poco (unos pocos
+// kilobytes), tiene un único escritor (su dueño) y el frontend ya lo maneja como un objeto único.
+// Partirlo en decenas de llamadas granulares multiplicaría la superficie de errores sin ganar nada.
+//
+// Cómo se evita que dos pestañas se pisen (revisión optimista): cada guardado del servidor lleva un
+// número de revisión que sube de uno en uno. Al guardar, el cliente dice sobre qué revisión trabajaba;
+// si el servidor ya va por otra más nueva, RECHAZA el guardado con FailedPrecondition y devuelve —en
+// el detalle del error— el documento que él tiene, para que el cliente fusione y reintente. Sin esto,
+// la última escritura ganaría a ciegas y borraría en silencio lo que hizo el otro dispositivo.
+
+syntax = "proto3";
+
+package mdm7mo.profile.v1;
+
+// ProfileService es la "ventanilla" del perfil del usuario. Todas sus llamadas EXIGEN sesión.
+service ProfileService {
+  // GetProfile devuelve el documento de perfil guardado en el servidor y su revisión actual.
+  // En español: si la cuenta nunca ha guardado nada, devuelve documento vacío y revisión 0.
+  rpc GetProfile(GetProfileRequest) returns (GetProfileResponse);
+
+  // PutProfile guarda el documento completo, siempre que la revisión de partida siga siendo la vigente.
+  rpc PutProfile(PutProfileRequest) returns (PutProfileResponse);
+}
+
+// GetProfileRequest no lleva campos: el perfil que se devuelve es el de la sesión que llama.
+message GetProfileRequest {}
+
+// GetProfileResponse entrega el perfil tal cual está guardado en el servidor.
+message GetProfileResponse {
+  // profile_json es el documento del perfil serializado como texto JSON. Cadena vacía = aún no hay
+  // nada guardado para esta cuenta (primer uso o cuenta recién creada).
+  string profile_json = 1;
+  // revision es el número de versión del documento. Empieza en 0 (nada guardado) y sube +1 por guardado.
+  int64 revision = 2;
+  // updated_at es cuándo se guardó por última vez, en formato ISO-8601 (UTC). Vacío si no hay nada.
+  string updated_at = 3;
+}
+
+// PutProfileRequest guarda el documento COMPLETO del perfil.
+message PutProfileRequest {
+  // profile_json es el documento del perfil serializado como texto JSON.
+  string profile_json = 1;
+  // base_revision es la revisión sobre la que el cliente hizo sus cambios. Debe coincidir con la que
+  // el servidor tiene guardada; si no coincide, el guardado se rechaza para no pisar cambios ajenos.
+  int64 base_revision = 2;
+}
+
+// PutProfileResponse confirma el guardado y entrega la revisión nueva.
+message PutProfileResponse {
+  // revision es el número de versión resultante (el base_revision recibido más uno).
+  int64 revision = 1;
+  // updated_at es el instante del guardado en formato ISO-8601 (UTC).
+  string updated_at = 2;
+}
+
+// ProfileConflict es el DETALLE que acompaña al error FailedPrecondition de PutProfile.
+// En español: cuando el guardado se rechaza por revisión desfasada, el error no se limita a decir
+// "no"; adjunta este mensaje con el documento que el servidor tiene ahora mismo, para que el cliente
+// pueda fusionar sus cambios con los del otro dispositivo y reintentar sin perder nada.
+message ProfileConflict {
+  // server_profile_json es el documento vigente en el servidor (el que el cliente aún no conocía).
+  string server_profile_json = 1;
+  // server_revision es la revisión vigente en el servidor.
+  int64 server_revision = 2;
+  // server_updated_at es cuándo se guardó esa revisión, en formato ISO-8601 (UTC).
+  string server_updated_at = 3;
+}

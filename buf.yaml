@@ -1,0 +1,73 @@
+# buf.yaml v2 — configuración del workspace de contratos Protobuf.
+# Define dónde viven los .proto y las reglas de lint/breaking.
+#
+# En español: este archivo le dice a la herramienta "buf" (la que gestiona los
+# contratos Protobuf) en qué carpeta están los archivos .proto y qué controles
+# de calidad aplicarles. Esos controles evitan que el contrato quede mal escrito
+# (lint) o que un cambio rompa, sin querer, a quien ya lo usa (breaking).
+
+# Versión del formato de este archivo de configuración de buf (la 2 es la actual).
+version: v2
+
+# Módulos: las carpetas donde buf debe buscar los archivos .proto.
+modules:
+  # Todos nuestros contratos viven bajo la carpeta "proto".
+  - path: proto
+
+# Lint: reglas de "buen estilo" que se verifican sobre los .proto.
+lint:
+  use:
+    # STANDARD es el conjunto recomendado por buf: nombres, paquetes, etc.
+    - STANDARD
+
+  # EXCEPCIONES EXPLÍCITAS, con nombre y apellido.
+  #
+  # Cómo leer esta sección, en español: "ignore_only" apaga UNA regla concreta en UNOS archivos
+  # concretos. No apaga nada más. Es la forma de decir "esto ya lo miramos, decidimos no cambiarlo, y
+  # aquí está el motivo", en vez de las dos alternativas malas: dejar que el control falle siempre
+  # (y entonces nadie lo mira, que es justo lo que pasaba: el control ni siquiera estaba conectado a
+  # "make lint") o apagar el conjunto de reglas entero (y entonces deja de vigilar lo que sí importa).
+  #
+  # Cada excepción de aquí cuesta lo mismo de arreglar que de mantener; se apuntan por si algún día
+  # toca una versión nueva del contrato, donde renombrar sale gratis.
+  ignore_only:
+    # ENUM_VALUE_PREFIX pide que los valores de una lista lleven delante el nombre de la lista:
+    # "TITLE_TYPE_MOVIE" en vez de "MOVIE", "CATEGORY_CINE" en vez de "CINE".
+    #
+    # POR QUÉ NO SE APLICA, y no es pereza: el nombre de estos valores NO es solo un nombre, es un
+    # dato guardado. El catálogo vive en un archivo JSON donde cada estreno dice literalmente
+    # {"type":"MOVIE","category":"CINE"}; son los 422 estrenos del catálogo vigente y todos los
+    # respaldos. Renombrarlos convertiría cada uno de esos archivos en ilegible de golpe (el lector
+    # rechaza los valores que no conoce, a propósito), y además cambiaría el nombre del valor en el
+    # código Go y TypeScript generado, es decir, en las pantallas y en el servidor a la vez. A cambio
+    # de eso: cero mejoras de comportamiento. Es un cambio rompiente que no compensa hoy.
+    ENUM_VALUE_PREFIX:
+      - proto/mdm7mo/catalog/v1/catalog.proto
+
+    # RPC_RESPONSE_STANDARD_NAME pide que la respuesta de "Login" se llame "LoginResponse".
+    # RPC_REQUEST_RESPONSE_UNIQUE pide que dos operaciones no compartan el mismo tipo de respuesta.
+    #
+    # POR QUÉ NO SE APLICAN, en las dos operaciones de identidad: registrarse e iniciar sesión
+    # devuelven EXACTAMENTE lo mismo (la sesión recién creada), y que compartan un tipo llamado
+    # "AuthResponse" no es un descuido: es la forma de que las dos no se puedan separar sin querer.
+    # Partirlo en dos tipos idénticos solo para contentar al nombre obligaría a cambiar el contrato,
+    # el servidor y el cliente web a la vez, sin que nadie note ninguna diferencia. Se anota como
+    # decisión, no como deuda.
+    RPC_RESPONSE_STANDARD_NAME:
+      - proto/mdm7mo/auth/v1/auth.proto
+    RPC_REQUEST_RESPONSE_UNIQUE:
+      - proto/mdm7mo/auth/v1/auth.proto
+
+# Breaking: detecta cambios que romperían la compatibilidad del contrato.
+#
+# CONTRA QUÉ SE COMPARA, en español, porque este proyecto no usa control de versiones (regla §7) y
+# esa es justo la referencia que "buf breaking" espera: la comparación se hace contra la carpeta
+# "proto-baseline", que guarda una COPIA CONGELADA del contrato tal y como quedó la última vez que se
+# aceptó a conciencia. Cualquier cambio que rompería a quien ya usa el contrato hace fallar
+# "make lint". Cuando un cambio rompiente sea deliberado —como reservar un campo que se retira— se
+# actualiza la copia con "make proto-baseline", que es un acto voluntario y visible, no algo que
+# ocurra solo.
+breaking:
+  use:
+    # FILE compara archivo por archivo para avisar de cambios incompatibles.
+    - FILE

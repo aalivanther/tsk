@@ -1,0 +1,33 @@
+# .dockerignore del backend — archivos que NO se envían al contexto de build de Docker.
+# En español: cuando Docker construye la imagen, copia la carpeta del backend como
+# "contexto". Aquí listamos lo que conviene excluir para que el build sea más rápido,
+# más ligero y no arrastre basura local ni secretos al interior de la imagen.
+
+# Binarios y artefactos temporales generados por air (hot reload) y por compilaciones.
+tmp/
+*.exe
+*.out
+api
+
+# Dependencias descargadas localmente; dentro del build se descargan limpias.
+vendor/
+
+# Secretos y configuración local: jamás deben entrar en una imagen.
+.env
+.env.*
+!.env.example
+
+# Archivos de control de versiones e historial de git.
+.git/
+.gitignore
+
+# Metadatos del sistema operativo (macOS) que no aportan nada al build.
+.DS_Store
+
+# El propio Dockerfile y su ignore no necesitan copiarse dentro del contexto.
+Dockerfile
+.dockerignore
+
+# Configuración de herramientas de desarrollo que no se usan dentro de la imagen.
+.air.toml
+.golangci.yml

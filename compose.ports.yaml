@@ -1,0 +1,21 @@
+# compose.ports.yaml — OVERRIDE de puertos para COEXISTIR con otro proyecto (btb) en la misma máquina.
+# En español: el otro proyecto ocupa 3000/8080. Este override REEMPLAZA (no suma) los puertos del HOST
+# para mdm7mo (web 3100, api 8090) sin tocar la red interna (web sigue hablando con api por http://api:8080).
+# El tag `!override` es CLAVE: sin él, Compose FUSIONA las listas de `ports` y quedaría 8080 + 8090
+# (conflicto). Con `!override` la lista del base se descarta y se usa solo esta.
+# Uso: docker compose -f compose.yaml -f compose.ports.yaml up -d --build
+services:
+  api:
+    ports: !override
+      - "127.0.0.1:8090:8080"
+    # El navegador (login) llega al API en :8090, así que ese es el origen del frontend permitido por CORS.
+    environment:
+      CORS_ALLOWED_ORIGIN: "http://localhost:3100"
+  web:
+    ports: !override
+      - "127.0.0.1:3100:3000"
+    # El navegador NO necesita saber dónde está el API: llama a "/rpc" en su propia dirección y es el
+    # servidor web quien reenvía (ver web/app/rpc). Por eso aquí ya no hay ninguna dirección de API
+    # que ajustar, y la misma imagen sirve en cualquier puerto o dominio sin reconstruirla.
+    environment:
+      SITE_URL: "http://localhost:3100"

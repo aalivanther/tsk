@@ -1,0 +1,232 @@
+# compose.yaml — orquestación de servicios con Docker Compose (en español).
+# Qué es: la "receta" que le dice a Docker qué piezas levantar y cómo conectarlas.
+# En este proyecto son dos: "api" (el backend en Go) y "web" (el frontend en Next.js).
+# Por qué SIN clave "version:": las versiones modernas de Docker Compose (v2 en adelante) ya
+# no usan ese campo; ponerlo solo genera avisos. Por eso este archivo empieza directo en services.
+# Qué es "develop.watch": una función de Compose que vigila los archivos del proyecto mientras
+# desarrollas; cuando cambian, sincroniza el código dentro del contenedor o reconstruye la imagen,
+# para ver los cambios sin reiniciar todo a mano. Se activa con "docker compose watch".
+
+services:
+  # --- api: el backend en Go que expone el servicio de catálogo (Connect) y /healthz ---
+  api:
+    # build: en vez de una imagen lista, construimos la imagen desde el código del backend.
+    build:
+      # context: la carpeta que se manda a Docker para construir (el backend completo).
+      context: ./backend
+      # dockerfile: las instrucciones de construcción viven en backend/Dockerfile.
+      dockerfile: Dockerfile
+      # args: la VERSIÓN se graba dentro del binario al compilar. Sale de la variable VERSION, que el
+      # Makefile rellena leyendo el archivo VERSION de la raíz — la única fuente de verdad. Si alguien
+      # construye a mano sin pasarla, queda "dev": una etiqueta honesta, en lugar del número viejo que
+      # antes vivía escrito en el Dockerfile y hacía que la aplicación mintiera sobre su propia versión.
+      args:
+        VERSION: "${VERSION:-dev}"
+    # ports: conecta el puerto 8080 de tu máquina con el 8080 de adentro del contenedor.
+    ports:
+      - "127.0.0.1:8080:8080"
+    # restart: si el proceso crashea, Docker lo levanta de nuevo solo (salvo que TÚ lo detengas).
+    # En español: sin esta línea, un pánico no atrapado dejaría el backend muerto hasta intervención manual.
+    restart: unless-stopped
+    # healthcheck: Docker pregunta periódicamente "¿estás sano?" ejecutando el PROPIO binario con el
+    # subcomando "healthcheck" (la imagen es distroless: no hay shell ni curl adentro). Mientras no
+    # esté sano, "web" no arranca (ver depends_on de web) y Docker lo marca en "docker ps".
+    healthcheck:
+      test: ["CMD", "/api", "healthcheck"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    # Límites de recursos: tope de memoria y CPU para que un pico o una fuga no se coma la máquina
+    # (coexistimos con el proyecto btb en el mismo host). El catálogo en memoria pesa <1 MB; 512 MiB
+    # es holgadísimo para el backend Go.
+    mem_limit: 512m
+    cpus: 1.5
+    # environment: ajustes que recibe el backend al arrancar.
+    environment:
+      PORT: "8080"
+      # SESSION_SIGNING_KEY firma los tokens de sesión. Si viene vacía, el API arranca en
+      # preparación, genera la clave en el volumen de datos y deja el resto cerrado hasta que
+      # /configuracion lo enciende. Una clave escrita en .env se usa tal cual.
+      SESSION_SIGNING_KEY: "${SESSION_SIGNING_KEY:-}"
+      LOCAL_SETTINGS_PATH: /data/local-settings.json
+      # CORS_ALLOWED_ORIGIN es el origen del navegador permitido (el frontend). En el base es :3000; el
+      # override de puertos (compose.ports.yaml) lo cambia a :3100.
+      CORS_ALLOWED_ORIGIN: "${CORS_ALLOWED_ORIGIN:-http://localhost:3000}"
+      # DB_PATH es la base de datos donde viven cuentas, sesiones, invitaciones y perfiles. Vive en el
+      # volumen escribible para sobrevivir a reinicios y reconstrucciones del contenedor.
+      DB_PATH: "/data/tsk.db"
+      # WRITABLE_SEED_PATH es el catálogo ACTUALIZABLE. Al arrancar se prefiere sobre el que viaja
+      # dentro de la imagen, de modo que el catálogo se puede renovar sin reconstruir ni redesplegar.
+      WRITABLE_SEED_PATH: "/data/seed.json"
+      # REQUIRE_INVITE decide si hace falta un código de invitación para crear cuenta.
+      # En el CÓDIGO el valor por defecto es "sí", para que un despliegue al que se le olvide
+      # configurar esto quede CERRADO en vez de abierto de par en par. Aquí, en el entorno de
+      # desarrollo local, se pone en "no" a propósito: tener que generar un código a mano cada vez
+      # que se prueba el registro en la propia máquina solo estorba y no protege de nada. Para
+      # ensayar el flujo de la alpha tal cual será, basta con poner REQUIRE_INVITE=true en .env y
+      # generar el código con "make admin-invite DB_PATH=/data/tsk.db" (ver el Makefile).
+      REQUIRE_INVITE: "${REQUIRE_INVITE:-false}"
+      # TRUSTED_PROXY_HOPS es cuántos proxies PROPIOS hay delante del servidor. En local no hay
+      # ninguno (0), así que se ignora la cabecera X-Forwarded-For, que cualquiera puede falsificar.
+      # Al desplegar detrás de una plataforma de hosting suele valer 1.
+      TRUSTED_PROXY_HOPS: "${TRUSTED_PROXY_HOPS:-0}"
+      # METRICS_ACCESS_KEY es la clave para poder leer /metrics. Sin ella, ni en el entorno ni en
+      # el archivo local, /metrics no se abre. /healthz y /readyz siguen abiertos: los usa el
+      # healthcheck de Docker.
+      METRICS_ACCESS_KEY: "${METRICS_ACCESS_KEY:-}"
+      # CATALOG_REFRESH_INTERVAL es cada cuánto el servidor vuelve a contar los días de futuro que le
+      # quedan al catálogo (para que la métrica y /readyz no se queden clavados en el valor del
+      # arranque) y mira si alguien instaló un catálogo nuevo con `make seed-install`. Una hora es de
+      # sobra; se puede bajar a segundos para comprobar el mecanismo a mano sin esperar.
+      CATALOG_REFRESH_INTERVAL: "${CATALOG_REFRESH_INTERVAL:-1m}"
+    # env_file: carga .env (si existe) para que SESSION_SIGNING_KEY real entre sin exponerla en el compose.
+    env_file:
+      - path: .env
+        required: false
+    # volumes: directorio ESCRIBIBLE persistente para las cuentas (users.json). Sobrevive reinicios.
+    volumes:
+      - mdm7mo-auth-data:/data
+    # develop.watch: reglas de vigilancia para desarrollo del backend.
+    develop:
+      watch:
+        # sync: si cambia cualquier archivo dentro de ./backend, se copia al contenedor en /app.
+        # Útil para iteración rápida del código fuente sin reconstruir la imagen entera.
+        - action: sync
+          path: ./backend
+          target: /app
+        # rebuild: si cambian las dependencias de Go (go.mod o su lockfile go.sum), no basta
+        # sincronizar: hay que reconstruir la imagen para descargar e instalar lo nuevo.
+        - action: rebuild
+          path: ./backend/go.mod
+        - action: rebuild
+          path: ./backend/go.sum
+
+  # --- web: el frontend en Next.js que muestra la interfaz al usuario ---
+  web:
+    # build: construimos la imagen del frontend desde su propio Dockerfile.
+    build:
+      # context: la carpeta del frontend completa.
+      context: ./web
+      # dockerfile: instrucciones de construcción en web/Dockerfile.
+      dockerfile: Dockerfile
+    # ports: conecta el puerto 3000 de tu máquina con el 3000 del contenedor (Next.js).
+    ports:
+      - "127.0.0.1:3000:3000"
+    # restart: igual que el api — si Next.js crashea, se levanta solo.
+    restart: unless-stopped
+    # healthcheck: usamos node (que SÍ existe en esta imagen) para hacer una petición HEAD a la raíz.
+    # En español: si Next responde, el frontend está sano; si no responde en 5s, el chequeo falla.
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "node",
+          "-e",
+          "fetch('http://127.0.0.1:3000/',{method:'HEAD'}).then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))",
+        ]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
+    # Límites de recursos: Next.js (SSR) es más glotón que el backend; 1 GiB de tope es razonable.
+    mem_limit: 1g
+    cpus: 2
+    # environment: la URL del backend. Dentro de la red de Compose, "api" es el nombre del
+    # servicio de arriba, así que el frontend habla con el backend por http://api:8080.
+    environment:
+      API_BASE_URL: "http://api:8080"
+      # SITE_URL es la dirección pública del sitio. La usan el mapa del sitio, el archivo robots y los
+      # enlaces al compartir una ficha. Sin ella, esos archivos anunciaban "http://localhost:3000"
+      # —una dirección que no existe para nadie de fuera— incluso corriendo en otro puerto.
+      SITE_URL: "${SITE_URL:-http://localhost:3000}"
+      # TRUST_PLATFORM_FORWARDED_HEADERS decide si la web reenvía al backend la cabecera que dice de
+      # qué dirección viene cada visitante. En local se deja vacía (=no confiar): esa cabecera la puede
+      # escribir cualquiera y hacerle caso permitiría esquivar el límite de intentos de contraseña.
+      # Detrás de una plataforma que la reescribe, se pone "true" Y ADEMÁS TRUSTED_PROXY_HOPS=1 en el
+      # backend: las dos juntas o ninguna.
+      TRUST_PLATFORM_FORWARDED_HEADERS: "${TRUST_PLATFORM_FORWARDED_HEADERS:-}"
+      # ADMIN_ACCESS_KEY es la contraseña del panel interno /admin. Sin ella en el entorno, el
+      # panel sigue cerrado salvo que se guarde una desde /configuracion. No hay contraseña por defecto.
+      ADMIN_ACCESS_KEY: "${ADMIN_ACCESS_KEY:-}"
+      LOCAL_SETTINGS_PATH: /data/local-settings.json
+      # DEMO_TODAY fija el "hoy" (formato AAAA-MM-DD) para CONTROLAR la demo. VACÍO = usar el DÍA DE HOY
+      # REAL (zona horaria de México). La ventana de meses que pide la app se DERIVA de ese "hoy" (un mes
+      # atrás, tres adelante), así que con el catálogo de ago–nov 2026 la línea de tiempo aterriza sola en
+      # lo que viene. Para congelar un día concreto (capturas, demos), pon aquí una fecha AAAA-MM-DD.
+      DEMO_TODAY: ""
+    # depends_on con condition: web no solo espera a que el contenedor del api ARRANQUE, sino a que
+    # su healthcheck diga que está SANO. En español: sin la condición, web podía quedar apuntando a un
+    # backend que aún no atendía peticiones.
+    volumes:
+      # El mismo volumen del API, solo lectura: la web lee la llave de paso y la contraseña
+      # del panel. Quien escribe el archivo es el API.
+      - mdm7mo-auth-data:/data:ro
+    depends_on:
+      api:
+        condition: service_healthy
+    # develop.watch: reglas de vigilancia para desarrollo del frontend.
+    develop:
+      watch:
+        # sync: si cambia algo dentro de ./web, se copia al contenedor en /app para iterar rápido.
+        - action: sync
+          path: ./web
+          target: /app
+        # rebuild: si cambian las dependencias del frontend (package.json, su lockfile
+        # pnpm-lock.yaml o los ajustes de pnpm en pnpm-workspace.yaml), se reconstruye la
+        # imagen para reinstalar paquetes con pnpm.
+        - action: rebuild
+          path: ./web/package.json
+        - action: rebuild
+          path: ./web/pnpm-lock.yaml
+        - action: rebuild
+          path: ./web/pnpm-workspace.yaml
+
+  # --- tools: el "taller" de desarrollo y generación de código. NO se levanta con `docker
+  # compose up`; se invoca bajo demanda (lo usan los objetivos del Makefile). Aquí viven, en
+  # versiones exactas, buf + gofumpt + golangci-lint + Node + pnpm, para que el host quede limpio.
+  tools:
+    # build: construimos la imagen del taller desde tools/Dockerfile, con el repo como contexto.
+    build:
+      context: .
+      dockerfile: tools/Dockerfile
+    # working_dir: dentro del contenedor trabajamos en /work, donde montamos el repositorio.
+    working_dir: /work
+    # profiles: marca este servicio como "bajo demanda". Así `docker compose up` levanta SOLO api
+    # y web; el taller se ejecuta con `docker compose run --rm tools ...` (lo hacen los make targets).
+    profiles:
+      - tools
+    environment:
+      LOCAL_SETTINGS_PATH: /data/local-settings.json
+    # env_file: carga las variables del .env de la raíz (TMDB_READ_TOKEN, OMDB_API_KEY) DENTRO del
+    # taller, para que `make seed` pueda llamar a TMDB. required:false = si .env no existe, no falla
+    # (las herramientas que no necesitan token —gen/lint/test— siguen funcionando sin él).
+    env_file:
+      - path: .env
+        required: false
+    volumes:
+      # Montamos TODO el repositorio en /work para que las herramientas lean y modifiquen el código.
+      - .:/work
+      # Cachés persistentes de Go (módulos descargados y caché de compilación) para acelerar las
+      # corridas siguientes de gen/lint/test sin volver a descargar/compilar todo.
+      - mdm7mo-go-mod:/go/pkg/mod
+      - mdm7mo-go-build:/root/.cache/go-build
+      # node_modules del frontend como VOLUMEN propio del contenedor (Linux). Así NO se usa el
+      # node_modules del host (que es de macOS y trae binarios nativos incompatibles con Linux).
+      - mdm7mo-web-node-modules:/work/web/node_modules
+      # El MISMO volumen de datos que usa el backend. En español: sin esto, la herramienta de
+      # administración (make admin-invite / admin-reset / admin-list-users) trabajaría sobre un
+      # archivo de base de datos distinto del que usa el servidor, y los códigos generados no los
+      # reconocería nadie. Montándolo aquí, basta con pasarle DB_PATH=/data/tsk.db para administrar
+      # la instalación que está corriendo de verdad. Ojo: el servidor debe haber arrancado al menos
+      # una vez, porque es él quien crea el archivo con el dueño correcto.
+      - mdm7mo-auth-data:/data
+
+# volumes: almacenes con nombre que Docker conserva entre ejecuciones (cachés y node_modules del
+# taller). En español: persisten para que no haya que rehacer descargas/instalaciones cada vez.
+volumes:
+  mdm7mo-go-mod:
+  mdm7mo-go-build:
+  mdm7mo-web-node-modules:
+  # Cuentas de usuario (login). Persiste el archivo users.json entre reinicios del contenedor api.
+  mdm7mo-auth-data:

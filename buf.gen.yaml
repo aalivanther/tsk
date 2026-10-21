@@ -1,0 +1,46 @@
+# buf.gen.yaml v2 — generación de código desde los .proto.
+# Genera Go (mensajes + servicios Connect) en backend/gen y TypeScript en web/src/gen.
+#
+# En español: este archivo es la "receta" que convierte el contrato Protobuf en
+# código real, listo para usar. De un mismo contrato salen dos traducciones: una
+# para el backend en Go y otra para la web en TypeScript. Así, ambos lados quedan
+# siempre sincronizados con el contrato y no hay que escribir ese código a mano.
+# Usamos plugins REMOTOS del BSR (Buf Schema Registry) fijados a una versión
+# exacta para que la generación sea reproducible: hoy y mañana produce lo mismo.
+
+# Versión del formato de este archivo de configuración de buf (la 2 es la actual).
+version: v2
+
+# clean: borra primero la salida anterior, para que no queden archivos viejos
+# que ya no correspondan al contrato actual.
+clean: true
+
+# managed mode: deja que buf rellene automáticamente ciertas opciones de los
+# .proto (en vez de escribirlas a mano en cada archivo de contrato).
+managed:
+  enabled: true
+  override:
+    # Prefijo del import path de los paquetes Go generados.
+    - file_option: go_package_prefix
+      value: mdm7mo/gen
+
+# plugins: cada uno traduce el contrato a un lenguaje/tecnología concreta.
+plugins:
+  # --- Go: mensajes protobuf ---
+  # Genera las estructuras de datos (mensajes) en Go.
+  - remote: buf.build/protocolbuffers/go:v1.36.11
+    out: backend/gen
+    # paths=source_relative: la carpeta de salida espeja la del .proto de origen.
+    opt: paths=source_relative
+  # --- Go: servicios Connect ---
+  # Genera el código de los servicios (las llamadas RPC) en estilo Connect.
+  - remote: buf.build/connectrpc/go:v1.20.0
+    out: backend/gen
+    # paths=source_relative: misma estructura de carpetas que el .proto de origen.
+    opt: paths=source_relative
+  # --- TypeScript: mensajes + servicios (protobuf-es v2 genera ambos) ---
+  # En Connect-ES v2 un único plugin genera tanto los mensajes como los servicios.
+  - remote: buf.build/bufbuild/es:v2.12.0
+    out: web/src/gen
+    # target=ts: emitir TypeScript (.ts), no JavaScript ya compilado.
+    opt: target=ts

@@ -1,0 +1,50 @@
+# .golangci.yml — configuración del linter de Go (golangci-lint v2).
+# En español: este archivo define cómo se revisa la calidad del código Go del backend.
+# Reúne varios "revisores" (linters) que detectan errores comunes, código muerto y
+# malas prácticas, y un "formateador" (gofumpt) que impone un estilo estricto y uniforme.
+# El formato de configuración es el v2 (clave "version: 2"), exigido por golangci-lint v2.
+version: "2"
+
+# --- Formateadores ---
+# En español: los formateadores reescriben el código para que tenga siempre el mismo
+# estilo. Aquí usamos gofumpt, una versión más estricta del gofmt estándar, tal como
+# pide la regla de estilo del proyecto.
+formatters:
+  enable:
+    - gofumpt # Formato estricto: más reglas que gofmt para un estilo aún más uniforme.
+  settings:
+    gofumpt:
+      # module-path le dice a gofumpt cuál es el módulo local de este backend.
+      # En español: sin esto, gofumpt usa una heurística que marca como "librería
+      # estándar" todo import cuyo primer segmento no tiene punto (como "mdm7mo/..."),
+      # y los agrupa mal junto a "context". Al declarar el módulo, gofumpt agrupa
+      # correctamente: estándar arriba, terceros en medio y los "mdm7mo/..." al final.
+      module-path: mdm7mo
+      # extra-rules activa las reglas adicionales de gofumpt para un estilo aún más limpio.
+      extra-rules: true
+
+# --- Linters (revisores de calidad) ---
+# En español: "default: standard" activa el conjunto recomendado por golangci-lint
+# (errcheck, govet, ineffassign, staticcheck, unused), que cubre los problemas más
+# importantes. Con "enable" añadimos algunos revisores extra de buenas prácticas.
+linters:
+  default: standard
+  enable:
+    - bodyclose    # Avisa si no se cierra el cuerpo de una respuesta HTTP (fuga de recursos).
+    - errorlint    # Verifica el manejo correcto de errores envueltos (uso de %w y errors.Is/As).
+    # NOTA: el linter "misspell" queda DESACTIVADO a propósito. Asume que el texto está en
+    # inglés y marca como error nuestras palabras en español (los comentarios del proyecto
+    # son 100% en español por regla). Activarlo generaría cientos de falsos positivos.
+    - revive       # Reglas de estilo y buenas prácticas configurables (sucesor de golint).
+    - unconvert    # Señala conversiones de tipo innecesarias que ensucian el código.
+    - usestdlibvars # Sugiere usar constantes de la librería estándar en lugar de literales.
+
+  # --- Exclusiones de revisión ---
+  # En español: aquí relajamos reglas SOLO donde tiene sentido, para no generar ruido.
+  exclusions:
+    rules:
+      # En los archivos de pruebas (_test.go) no exigimos cerrar cuerpos de respuesta:
+      # las pruebas son de vida corta y cerrar todo añade ruido sin beneficio real.
+      - path: _test\.go
+        linters:
+          - bodyclose

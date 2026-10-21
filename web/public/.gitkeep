@@ -1,0 +1,3 @@
+# Carpeta de archivos estaticos publicos de Next.js (favicon, imagenes, etc.).
+# En espanol: Next.js sirve tal cual lo que vive aqui en la raiz del sitio. Se versiona
+# con .gitkeep para que la carpeta exista en el repo y el COPY del Dockerfile no falle.

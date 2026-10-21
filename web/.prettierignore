@@ -1,0 +1,13 @@
+# Archivos que Prettier NO debe formatear ni revisar.
+# En español: el código generado (desde los .proto), las dependencias y los artefactos de build no
+# se tocan a mano, así que los excluimos para que `prettier --check` no los marque como "mal formateados".
+node_modules/
+.next/
+out/
+# Código generado por buf a partir de los contratos .proto (no se edita a mano).
+src/gen/
+# Tipos que genera Next.js automáticamente.
+next-env.d.ts
+# El candado de dependencias lo escribe pnpm con su propio formato; reformatearlo no aporta nada y
+# provocaría diferencias enormes cada vez que se instala algo.
+pnpm-lock.yaml

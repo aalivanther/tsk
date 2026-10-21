@@ -1,0 +1,521 @@
+// Archivo: catalog.proto — Contrato Protobuf del servicio de catálogo (Sprint 2: canónico).
+// En español: este archivo describe, en un lenguaje neutral (Protobuf), QUÉ preguntas puede
+// responder el backend y CÓMO son las respuestas. A partir de este "contrato" se genera código
+// en Go (el backend) y en TypeScript (la web), para que ambos lados hablen exactamente el mismo
+// idioma sin errores. Aquí ya vive el MODELO CANÓNICO completo del proyecto (el mensaje Release).
+
+syntax = "proto3";
+
+package mdm7mo.catalog.v1;
+
+// CatalogService es el servicio de catálogo del producto MDM 7mo.
+// En español: es la "ventanilla" del backend que responde las preguntas del frontend sobre los
+// estrenos. Expone cuatro operaciones: una de información del servicio (útil para diagnóstico) y
+// tres del catálogo (listar los resúmenes de un mes, traer la ficha completa de uno, y volcar las
+// fichas completas de un mes entero para las tres pantallas que las necesitan todas a la vez).
+//
+// LA REGLA QUE ORDENA ESTE SERVICIO, y que conviene leer antes de tocar nada:
+//
+//   Una LISTA devuelve RESÚMENES. Una FICHA devuelve la ficha COMPLETA.
+//
+// Por qué existe esa regla, con el número que la motivó: la portada dibuja unas cajitas con el día,
+// el título y la carátula de cada estreno. Para eso se estaba mandando al navegador el reparto
+// completo, la galería de fotos, el calendario de episodios, la saga entera y la lista de videos de
+// TODOS los estrenos de tres meses. Medido: 4,3 MB de página, de los que 3,6 MB eran datos que la
+// pantalla nunca lee. El resumen deja ese bloque en un sexto de su tamaño sin quitar ni un estreno
+// ni un dato de la pantalla: lo que sobraba se pide cuando de verdad se abre una ficha.
+service CatalogService {
+  // GetServiceInfo devuelve metadata básica del servicio (nombre y versión del proyecto).
+  // En español: sirve para confirmar que el backend está vivo y qué versión corre.
+  rpc GetServiceInfo(GetServiceInfoRequest) returns (GetServiceInfoResponse);
+
+  // ListReleases devuelve los RESÚMENES de los estrenos de un mes/año, con filtros opcionales.
+  // En español: es la consulta principal de la línea de tiempo ("dame los estrenos de junio 2026").
+  // Devuelve solo lo que las pantallas de LISTA dibujan (ver ReleaseSummary). Quien necesite la
+  // ficha completa de un título la pide con GetRelease en el momento en que la abre.
+  rpc ListReleases(ListReleasesRequest) returns (ListReleasesResponse);
+
+  // GetRelease devuelve el detalle completo de un estreno por su identificador.
+  // En español: es lo que alimenta la pantalla de detalle (deep-link /titulo/[id]) y también la
+  // ficha que se abre desde la línea de tiempo, que ahora la pide en ese instante.
+  rpc GetRelease(GetReleaseRequest) returns (GetReleaseResponse);
+
+  // ListReleaseDetails vuelca las fichas COMPLETAS de un mes/año. No es un listado de pantalla.
+  //
+  // Por qué existe, en español: hay tres pantallas —la constelación personal, la página de una
+  // persona y la página de una saga— que no dibujan una lista de estrenos: RECORREN el catálogo
+  // entero buscando dentro de cada ficha (quién actúa, quién dirige, a qué saga pertenece). Esas
+  // pantallas necesitan de verdad todas las fichas, y pedirlas una por una serían cientos de
+  // llamadas. Se les da una operación propia, con un nombre que dice lo que cuesta, en vez de
+  // ensuciar el listado de la portada con un interruptor de "dámelo todo": así, cualquier pantalla
+  // nueva que aparezca en el futuro llamando a esto se ve a simple vista en la revisión del código.
+  rpc ListReleaseDetails(ListReleaseDetailsRequest) returns (ListReleaseDetailsResponse);
+}
+
+// TitleType distingue entre película y serie.
+// En español: el tipo de obra; "UNSPECIFIED" es el valor cero obligatorio de proto3 (sin definir).
+enum TitleType {
+  TITLE_TYPE_UNSPECIFIED = 0;
+  MOVIE = 1;
+  SERIES = 2;
+}
+
+// Category clasifica dónde "vive" el estreno: cine, streaming, cadenas de TV o cine INDIE/festivales.
+// En español: es el agrupador por el que la línea de tiempo arma los "paquetes" de cada día. INDIE es
+// la 4ª categoría (estrenos independientes / de festival / arthouse), distinta de los grandes estrenos.
+enum Category {
+  CATEGORY_UNSPECIFIED = 0;
+  CINE = 1;
+  STREAMING = 2;
+  TV = 3;
+  INDIE = 4;
+}
+
+// GetServiceInfoRequest no necesita parámetros de entrada.
+message GetServiceInfoRequest {}
+
+// GetServiceInfoResponse trae el nombre del servicio y la versión del proyecto.
+message GetServiceInfoResponse {
+  string service_name = 1; // nombre lógico del servicio, ej. "CatalogService".
+  string version = 2;      // versión del proyecto (esquema propio, ej. "0.0.21").
+}
+
+// ListReleasesRequest pide los estrenos de un mes/año concreto, con filtros opcionales.
+// En español: "year" y "month" acotan el periodo; "types" y "categories" son filtros que, si van
+// vacíos, significan "todos" (no se filtra por ese criterio).
+message ListReleasesRequest {
+  int32 year = 1;                   // año, ej. 2026.
+  int32 month = 2;                  // mes 1-12, ej. 6 para junio.
+  repeated TitleType types = 3;     // filtro opcional por tipo (vacío = todos).
+  repeated Category categories = 4; // filtro opcional por categoría (vacío = todas).
+
+  // PAGINACIÓN — números RESERVADOS DE VERDAD, no campos que se ignoran.
+  //
+  // Qué pasaba antes y por qué se cambia, en español: aquí vivían dos campos declarados y en marcha,
+  // "page_size" y "page_token", con un comentario que decía que estaban "reservados desde ya". No lo
+  // estaban: eran campos normales y corrientes que cualquiera podía rellenar, y el servidor los
+  // ignoraba sin decir nada. Comprobado: pidiendo {"pageSize":5} el servidor respondía 200 con el mes
+  // COMPLETO —150 445 bytes, unas treinta veces lo pedido—, sin testigo de continuación y sin ningún
+  // error. Quien programara contra ese contrato tenía todos los motivos para creer que estaba
+  // paginando, y no lo estaba.
+  //
+  // Esa es exactamente la "promesa vacía en el contrato" que prohíbe la regla §1 del proyecto, y el
+  // mismo argumento por el que se retiraron "dub_cast" y los idiomas de doblaje unos mensajes más
+  // abajo. Así que se aplica el mismo remedio, que además cumple mejor el objetivo que perseguía el
+  // comentario original: RESERVAR los números. Reservado, el número queda apartado para siempre —
+  // nadie puede reutilizarlo por accidente y el día que se pagine de verdad se recupera tal cual— y,
+  // mientras tanto, el contrato no promete nada que no cumpla.
+  //
+  // La semántica prevista para cuando se implemente sigue siendo la estándar de Google (AIP-158):
+  // page_size pide un máximo de elementos y page_token es el testigo opaco de la respuesta anterior.
+  // Se implementará junto con su lado del servidor y su prueba, no antes.
+  reserved 5, 6;
+  reserved "page_size", "page_token";
+}
+
+// ListReleasesResponse devuelve los RESÚMENES de los estrenos que cumplen la consulta.
+message ListReleasesResponse {
+  // HUECO RESERVADO del campo "releases" (1), que hasta la versión 0.1.63 devolvía la ficha COMPLETA
+  // de cada estreno.
+  //
+  // Por qué se retira en vez de dejarlo, en español: era la causa medida del problema de peso de la
+  // portada (ver la nota de arriba del servicio). Si se hubiera dejado el campo vivo "por si acaso",
+  // cualquier pantalla nueva habría podido volver a pedirlo sin querer y el problema habría vuelto en
+  // silencio. Reservando número Y nombre, el compilador impide que nadie lo reutilice por accidente y
+  // un cliente viejo que buscara el campo 1 recibe una lista vacía en vez de datos mal interpretados.
+  reserved 1;
+  reserved "releases";
+
+  // HUECO RESERVADO de "next_page_token" (2), el testigo de continuación de la paginación.
+  //
+  // En español: acompaña a la reserva de "page_size" y "page_token" en la petición (ver la nota de
+  // allí). Era la otra mitad de la misma promesa vacía: el servidor nunca lo rellenaba, así que un
+  // cliente que comprobara "¿hay más páginas?" recibía siempre "no" —lo cual era cierto, pero por
+  // casualidad, no porque hubiera paginación—. Los tres números vuelven juntos el día que se pagine
+  // de verdad.
+  reserved 2;
+  reserved "next_page_token";
+
+  // summaries son los estrenos en su forma LIGERA, en el mismo orden estable de siempre.
+  repeated ReleaseSummary summaries = 3;
+}
+
+// ListReleaseDetailsRequest pide las fichas COMPLETAS de un mes/año, con los mismos filtros.
+//
+// En español: es gemela de ListReleasesRequest a propósito, para que las tres pantallas que
+// necesitan el catálogo entero acoten exactamente igual el periodo. NO lleva campos de paginación:
+// quien llama a esto lo hace precisamente porque necesita el mes COMPLETO para recorrerlo, así que
+// una respuesta a medias no le serviría de nada y ofrecerla sería engañoso.
+message ListReleaseDetailsRequest {
+  int32 year = 1;                   // año, ej. 2026.
+  int32 month = 2;                  // mes 1-12, ej. 6 para junio.
+  repeated TitleType types = 3;     // filtro opcional por tipo (vacío = todos).
+  repeated Category categories = 4; // filtro opcional por categoría (vacío = todas).
+}
+
+// ListReleaseDetailsResponse devuelve las fichas completas del periodo pedido.
+message ListReleaseDetailsResponse {
+  repeated Release releases = 1;
+}
+
+// GetReleaseRequest pide el detalle de un estreno por su id.
+message GetReleaseRequest {
+  string id = 1;
+}
+
+// GetReleaseResponse devuelve el estreno solicitado, con su resumen al lado.
+message GetReleaseResponse {
+  Release release = 1;
+
+  // summary es el MISMO estreno en su forma ligera, calculado por el servidor.
+  //
+  // Por qué viaja junto a la ficha completa, en español: el resumen lleva tres datos DERIVADOS que
+  // no existen tal cual en la ficha (el nombre de la saga, los nombres de quien dirige y los del
+  // reparto principal; ver ReleaseSummary). La sección de "Conexiones" los usa para emparejar un
+  // título con los demás del catálogo. Si el servidor no los mandara aquí, el navegador tendría que
+  // volver a deducirlos de la ficha completa con una copia de las mismas reglas escrita en otro
+  // lenguaje — y dos copias de una regla acaban, siempre, diciendo cosas distintas. Mandándolo, la
+  // regla vive en UN solo sitio. El coste es de menos de un kilobyte por ficha abierta.
+  ReleaseSummary summary = 2;
+}
+
+// ReleaseSummary es el estreno VISTO DESDE UNA LISTA: solo lo que se dibuja sin abrir su ficha.
+//
+// Qué lleva y por qué, en español: lleva exactamente lo que consultan la línea de tiempo, la agenda
+// del teléfono, el buscador de títulos, los avisos de la watchlist, el fondo de la página y la vista
+// previa que se abre al pulsar un día. Ni un campo más. Lo que quedó fuera —reparto, equipo, galería,
+// calendario de episodios, saga completa, videos e idiomas— se comprobó uno por uno contra el código
+// que lo lee: TODO ello lo consume únicamente la ficha de detalle, que se abre para UN título a la
+// vez y ahora lo pide en ese momento con GetRelease.
+//
+// Por qué un mensaje aparte y no una "máscara de campos" sobre Release: la guía de diseño de APIs de
+// Google (AIP-157) desaconseja expresamente las máscaras como comportamiento por defecto de un
+// listado y recomienda este patrón. Además hay una razón práctica más fuerte: con un mensaje aparte,
+// una pantalla que intente leer el reparto de un elemento de la lista NO COMPILA. Con una máscara
+// compilaría y devolvería una lista vacía, que es la peor clase de fallo: silencioso.
+//
+// Los números de campo COINCIDEN a propósito con los del mismo campo en Release (id=1, type=2…), para
+// que quien lea los dos mensajes vea de un vistazo que son el mismo dato. Los tres campos DERIVADOS
+// —que no existen en Release— van en números altos (30 en adelante) justamente para que se note que
+// no tienen pareja allí.
+message ReleaseSummary {
+  string id = 1;              // identificador único del estreno.
+  TitleType type = 2;         // película o serie (etiqueta y filtro).
+  Category category = 3;      // cine, streaming, cadenas o indie (agrupa los paquetes del día).
+  string title = 4;           // título mostrado al usuario (es-MX).
+  string overview = 5;        // sinopsis: la lee la vista previa que se abre al pulsar un día.
+  string release_date = 6;    // fecha ISO 8601 (AAAA-MM-DD): ordena la línea, la agenda y los avisos.
+  string poster_url = 7;      // carátula del anticipo del día y de las tarjetas del carrusel.
+  string backdrop_url = 8;    // imagen ancha: fondo global rotativo y portada de la vista previa.
+  repeated string genres = 9; // géneros: filtro de la barra y conexiones por género.
+  Ratings ratings = 15;       // calificaciones: tmdb da la rareza y el orden; imdb y RT los pinta la previa.
+  Availability availability = 16; // plataformas y cadenas: se dibujan en la línea y en los avisos.
+
+  // overview_language dice en qué idioma está de verdad el texto de "overview" de arriba.
+  //
+  // Por qué tiene que viajar TAMBIÉN en el resumen, en español: la vista previa que se abre al pulsar
+  // un día pinta la sinopsis, y la pinta a partir de este mensaje ligero, no de la ficha completa.
+  // La ficha completa sí llevaba esta etiqueta, pero la vista previa nunca la veía, así que enseñaba
+  // un texto en inglés exactamente igual que uno en español, sin decirlo. Y no es un caso raro: de
+  // los 422 estrenos del catálogo vigente, 112 (el 26,5 %) NO tienen la sinopsis en español de
+  // México —64 están en inglés, 47 en español de España y 1 no tiene sinopsis en ninguna parte—.
+  // Enseñar un texto en otro idioma callándolo hace parecer que el producto está a medio traducir;
+  // enseñarlo diciendo de dónde salió es la única forma honesta de darlo. Lleva el mismo número (23)
+  // que en la ficha completa, como el resto de campos con pareja.
+  string overview_language = 23;
+
+  // saga_name es SOLO el nombre de la saga, sin sus entradas.
+  //
+  // En español: la ficha completa trae la colección entera (con la carátula, la sinopsis y la nota de
+  // cada película de la saga), y eso pesa. Para emparejar dos estrenos de la misma saga en la sección
+  // de "Conexiones" basta con el nombre. Vacío significa que el estreno no pertenece a ninguna saga.
+  string saga_name = 30;
+
+  // director_names son los nombres de quienes dirigen el estreno.
+  //
+  // En español: se derivan del equipo técnico de la ficha completa quedándose con los créditos cuyo
+  // puesto es de dirección. Sirven para la conexión "mismo director" sin cargar los cientos de
+  // créditos técnicos de cada título.
+  repeated string director_names = 31;
+
+  // lead_cast_names son los nombres del reparto PRINCIPAL (los primeros de la lista, que vienen
+  // ordenados por importancia).
+  //
+  // En español: es la conexión que más veces se cumple de verdad en este catálogo ("sale el mismo
+  // actor"). Mandar un puñado de nombres cuesta una fracción minúscula de lo que costaba mandar el
+  // reparto entero con su foto, su personaje y su número de episodios.
+  repeated string lead_cast_names = 32;
+}
+
+// Release es el MODELO CANÓNICO del proyecto: todo lo que se sabe de un estreno.
+// En español: es la "ficha" completa de una película o serie. En Fase 0 vive en seed.json; en
+// Fase 2 se mapeará casi 1:1 a Postgres (JSONB para los campos heterogéneos). La "rareza"
+// (legendary/epic/rare/common) NO se guarda aquí: se DERIVA en el cliente a partir de ratings.tmdb.
+message Release {
+  string id = 1;                         // identificador único del estreno dentro del proyecto.
+  TitleType type = 2;                    // película o serie.
+  Category category = 3;                 // cine, streaming o cadenas.
+  string title = 4;                      // título mostrado al usuario (es-MX).
+  string overview = 5;                   // sinopsis (ver overview_language para saber en qué idioma está).
+  string release_date = 6;               // fecha de estreno en formato ISO 8601 (AAAA-MM-DD).
+  string poster_url = 7;                 // URL del póster (TMDB en producción).
+  string backdrop_url = 8;               // URL de la imagen de fondo (backdrop).
+  repeated string genres = 9;            // géneros, ej. ["Drama", "Época"].
+  string original_language = 10;         // idioma original, ej. "Inglés".
+  repeated string spoken_languages = 11; // idiomas hablados/disponibles.
+
+  // HUECOS RESERVADOS de los dos campos de video que existieron hasta la versión 0.1.52:
+  // "trailer_youtube_key" (12) y "complementary_youtube_key" (13). Eran dos textos sueltos: un solo
+  // código de YouTube cada uno, sin decir en qué idioma estaba el video, para qué país se publicó, ni
+  // si seguía existiendo. Con eso era imposible cumplir "a quien elija español enséñale el tráiler
+  // mexicano y a quien elija inglés el de la distribuidora": no había dónde escribir las dos opciones.
+  // Los sustituye la lista completa "videos" (campo 22).
+  //
+  // Por qué se reservan en vez de reutilizar los números: en un contrato Protobuf lo que viaja por la
+  // red es el NÚMERO del campo, no su nombre. Si dentro de seis meses alguien creara un campo nuevo
+  // con el número 12, un cliente viejo leería el dato nuevo creyendo que es la vieja key de YouTube y
+  // enseñaría basura sin fallar. Reservando número Y nombre, el compilador impide ese accidente.
+  reserved 12, 13;
+  reserved "trailer_youtube_key", "complementary_youtube_key";
+
+  repeated Image images = 14;            // galería "verla en acción".
+  Ratings ratings = 15;                  // calificaciones; ratings.tmdb es la base de la rareza.
+  Availability availability = 16;        // dónde verlo (plataformas y cadenas).
+  Collection saga = 17;                  // saga/colección (opcional, solo películas en TMDB).
+  repeated Credit cast = 18;             // reparto (actores).
+
+  // HUECO RESERVADO del campo "dub_cast" (19), que existió hasta la versión 0.1.52.
+  //
+  // Qué prometía y por qué se retira, en español: decía guardar las voces de doblaje al español de cada
+  // título, y su comentario justificaba el vacío diciendo que era "curaduría manual". Se buscó esa
+  // curaduría en todo el proyecto y NO EXISTE: no hay herramienta que la alimente, ni archivo con esos
+  // datos, ni pantalla para escribirlos. El resultado medido fue 0 de 422 estrenos con una sola voz de
+  // doblaje, durante toda la vida del campo. Tampoco hay de dónde sacarlo: se revisó la API de TMDB y no
+  // publica el reparto de doblaje de ningún país.
+  //
+  // Un campo que nadie rellena y nadie puede rellenar no es una función pendiente: es una promesa vacía
+  // en el contrato, y la regla §1 del proyecto ("nada de lo arreglo después") prohíbe exactamente eso.
+  // Se retira en vez de dejarlo. Si algún día aparece una fuente real de doblaje, se añade un campo
+  // NUEVO con un número nuevo, ya con datos detrás.
+  reserved 19;
+  reserved "dub_cast";
+
+  repeated Credit crew = 20;             // dirección y staff.
+  Schedule schedule = 21;                // calendario de emisión (solo series/periódicos; opcional).
+
+  // videos son TODOS los videos utilizables del estreno, cada uno etiquetado y YA VERIFICADO.
+  // En español: en vez de guardar "el tráiler" (una decisión tomada al generar el catálogo, cuando
+  // todavía no se sabe qué idioma prefiere la persona), guardamos la lista entera de lo que existe.
+  // La aplicación elige en el momento, sabiendo el idioma del usuario. La lista puede venir VACÍA y
+  // eso es normal.
+  //
+  // CUÁNTO DE NORMAL, con la cuenta hecha sobre el catálogo vigente (422 estrenos, agosto de 2026):
+  // 87 títulos (el 20,6 %) no traen NINGÚN video, y 107 (el 25,4 %) no traen ninguno de clase
+  // "tráiler" aunque tengan otras piezas. Es decir, entre uno de cada cinco y uno de cada cuatro. La
+  // cifra que decía antes este comentario —"casi 4 de cada 10", presentada como medida— no sale de
+  // ningún recuento del catálogo: la de verdad es la mitad de grande. Se corrige porque una cifra
+  // inventada envejece peor que ninguna: se cita, se copia a otros archivos y acaba justificando
+  // decisiones de producto que nadie volvió a comprobar.
+  repeated Video videos = 22;
+
+  // overview_language dice EN QUÉ IDIOMA está realmente el texto de "overview", como etiqueta de TMDB
+  // ("es-MX", "es-ES", "en-US"…). Vacío significa que no hay sinopsis en ninguna parte.
+  //
+  // Por qué hace falta, en español: el catálogo se pide en español de México, pero TMDB no traduce todo.
+  // Se midió: 112 de 422 estrenos (el 26,5 %) llegaban con la sinopsis VACÍA, y en la mayoría de esos
+  // casos el texto SÍ existía en español de España o en inglés — simplemente nadie lo iba a buscar. Ahora
+  // sí se busca, en ese orden. Pero rellenar el hueco con un texto en inglés y callarlo sería engañar a
+  // quien lo lee: parecería que el producto está a medio traducir. Con este campo la interfaz puede
+  // enseñar la sinopsis que hay y decir de dónde salió, que es la única forma honesta de darla.
+  string overview_language = 23;
+}
+
+// Video es UN video de YouTube asociado a un estreno, con TODO lo que hace falta para decidir si
+// mostrárselo a esta persona en concreto: en qué idioma está, para qué país se publicó, qué clase de
+// video es, si viene de la distribuidora oficial y —lo más importante— si de verdad se puede
+// reproducir incrustado en nuestra página.
+message Video {
+  string youtube_key = 1;       // el código del video en YouTube (ej. "QXibcL7-XbU").
+  string language = 2;          // idioma del AUDIO, código ISO 639-1: "es", "en", "pt", "ja"… Vacío = sin idioma.
+  string region = 3;            // país para el que se publicó, ISO 3166-1: "MX", "ES", "US"… Vacío = sin país.
+  VideoKind kind = 4;           // qué clase de video es (tráiler, teaser, detrás de cámaras…).
+  bool official = 5;            // TMDB lo marcó como publicado por una fuente oficial (estudio/distribuidora).
+  string title = 6;             // nombre del video tal como lo puso quien lo subió; delata "(Doblado)"/"(Subtitulado)".
+  string channel = 7;           // nombre del canal de YouTube que lo publicó (ej. "Warner Bros."). Viene de oEmbed.
+  ChannelKind channel_kind = 8; // clasificación del canal: distribuidora, plataforma, indie/festival o desconocido.
+  DubbingKind dubbing = 9;      // doblado, subtitulado o audio original (deducido del título del video).
+  int32 published_year = 10;    // año de publicación; a igualdad de todo lo demás gana el más reciente.
+  int32 resolution = 11;        // 360/480/720/1080/2160; a igualdad de todo lo demás gana el de más calidad.
+  bool playable = 12;           // VERIFICADO: existe, no es privado y permite incrustarse. Si es false NO SE MUESTRA.
+  string verified_at = 13;      // fecha (AAAA-MM-DD) en que se comprobó "playable". Para saber si el dato envejeció.
+}
+
+// VideoKind son las clases de video que TMDB distingue.
+// En español: se traducen a un enum propio para que la aplicación no dependa de textos en inglés que
+// TMDB podría cambiar mañana ("Behind the Scenes" es una cadena de texto, no un contrato).
+enum VideoKind {
+  VIDEO_KIND_UNSPECIFIED = 0;       // clase desconocida o que no nos interesa.
+  VIDEO_KIND_TRAILER = 1;           // "Trailer": el tráiler propiamente dicho.
+  VIDEO_KIND_TEASER = 2;            // "Teaser": adelanto corto, previo al tráiler.
+  VIDEO_KIND_CLIP = 3;              // "Clip": una escena suelta.
+  VIDEO_KIND_FEATURETTE = 4;        // "Featurette": pieza promocional de making-of.
+  VIDEO_KIND_BEHIND_THE_SCENES = 5; // "Behind the Scenes": detrás de cámaras.
+  VIDEO_KIND_BLOOPERS = 6;          // "Bloopers": tomas falsas.
+  VIDEO_KIND_OPENING_CREDITS = 7;   // "Opening Credits": créditos de apertura.
+  VIDEO_KIND_RECAP = 8;             // "Recap": resumen de lo anterior.
+}
+
+// ChannelKind clasifica QUIÉN publicó el video.
+// En español: es lo que permite cumplir la petición de "tráiler crudo de distribuidoras o canales
+// indie" cuando la persona elige inglés. No existe ninguna API pública que diga a qué distribuidora
+// pertenece un canal de YouTube: esta clasificación sale de una lista mantenida en el proyecto más el
+// campo "official" de TMDB como refuerzo. Lo que no está en la lista cae en UNSPECIFIED, que baja de
+// prioridad sin romper nada.
+enum ChannelKind {
+  CHANNEL_KIND_UNSPECIFIED = 0; // no se pudo determinar; se trata como escalón bajo, pero no el último.
+  CHANNEL_KIND_DISTRIBUTOR = 1; // estudio o distribuidora (Warner Bros., 20th Century Studios, Pixar…).
+  CHANNEL_KIND_PLATFORM = 2;    // plataforma de streaming (Netflix, Prime Video, Crunchyroll, HBO Max…).
+  CHANNEL_KIND_INDIE = 3;       // distribuidora indie, festival o casa de arte (A24, MUBI, Curzon, NEON…).
+  CHANNEL_KIND_AGGREGATOR = 4;  // recopilador o canal de aficionados (TV Promos…). Último recurso.
+}
+
+// DubbingKind dice cómo suena el video, deducido del nombre que le puso quien lo subió.
+// En español: es una HEURÍSTICA honesta, no un dato certificado. Funciona porque las distribuidoras
+// rotulan "(Doblado)" y "(Subtitulado)" de forma muy consistente, pero cuando no se detecta nada se
+// queda en UNSPECIFIED y la cadena de elección sigue funcionando igual (el escalón siguiente recoge
+// lo que el anterior no cubrió). Importa porque TMDB etiqueta como es-MX tanto el doblaje latino como
+// el tráiler en inglés con subtítulos en español latino, y quien pide español prefiere OÍR español.
+enum DubbingKind {
+  DUBBING_KIND_UNSPECIFIED = 0; // no se pudo deducir del título.
+  DUBBING_KIND_ORIGINAL = 1;    // audio original, sin marcas en el título.
+  DUBBING_KIND_DUBBED = 2;      // el título dice "(Doblado)", "Doblaje", "Latino", "Dubbed"…
+  DUBBING_KIND_SUBTITLED = 3;   // el título dice "(Subtitulado)", "Sub español", "ENG SUB"…
+}
+
+// Schedule es el CALENDARIO DE EMISIÓN de un título periódico (series y contenidos por entregas).
+// En español: junta las fechas reales de salida de cada episodio (vienen de TMDB vía la herramienta
+// schedulegen). Las películas no llevan calendario (su única fecha es release_date). El frontend lo
+// usa para dibujar el mini-calendario de fechas en el detalle de la serie.
+message Schedule {
+  repeated EpisodeDate episodes = 1; // episodios con fecha conocida, ordenados por fecha ascendente.
+}
+
+// EpisodeDate es UNA entrega del calendario: qué episodio sale y cuándo.
+message EpisodeDate {
+  int32 season = 1;   // número de temporada (1+; TMDB usa 0 para especiales).
+  int32 number = 2;   // número de episodio dentro de la temporada (1+).
+  string air_date = 3; // fecha de emisión en formato ISO 8601 (AAAA-MM-DD).
+  string name = 4;    // nombre del episodio (puede venir vacío si TMDB no lo tiene).
+}
+
+// Image es una imagen de la galería, con su etiqueta descriptiva.
+message Image {
+  string url = 1;   // URL de la imagen.
+  string label = 2; // etiqueta, ej. "Escena 01", "Set de rodaje".
+}
+
+// Ratings agrupa las calificaciones de distintas fuentes.
+// En español: "tmdb" es numérica (0-10) y es la base de la rareza; las demás son texto opcional
+// (vienen de OMDb y pueden faltar, así que se tratan siempre como opcionales).
+message Ratings {
+  double tmdb = 1;            // calificación de TMDB (0-10). Base de la rareza derivada en cliente.
+  string imdb = 2;            // calificación de IMDb (texto, opcional, de OMDb).
+  string rotten_tomatoes = 3; // porcentaje de Rotten Tomatoes (texto, opcional, de OMDb).
+  string metacritic = 4;      // puntaje de Metacritic (texto, opcional, de OMDb).
+}
+
+// Availability describe DÓNDE se puede ver el estreno: en qué plataformas de suscripción y en qué
+// cadenas de televisión. Los datos vienen de TMDB (que a su vez los toma de JustWatch para México).
+message Availability {
+  repeated string platforms = 1;     // plataformas de streaming, ej. ["Netflix", "Max"].
+  repeated string networks = 2;      // cadenas de TV, ej. ["HBO", "Sony"].
+
+  // HUECOS RESERVADOS de "dub_languages" (3) y "sub_languages" (4), que existieron hasta la 0.1.52.
+  //
+  // Qué prometían y por qué se retiran, en español: decían guardar en qué idiomas está doblado y
+  // subtitulado cada estreno. Nunca tuvieron ni un dato (0 de 422 estrenos medidos), su comentario los
+  // atribuía a una "curaduría manual" que no existe en ninguna parte del proyecto, y la función que
+  // dibuja "Dónde verlo" ni siquiera los leía: aunque alguien los hubiera rellenado, no se habrían visto.
+  //
+  // Antes de retirarlos se buscó de verdad si TMDB podía darlos, y NO puede:
+  //   - "translations" dice a qué idiomas está traducida la FICHA (el título y la sinopsis). No tiene
+  //     ninguna relación con el audio de la película. Usarlo aquí sería inventar.
+  //   - "spoken_languages" dice qué idiomas se HABLAN DENTRO de la obra (una película rodada en inglés y
+  //     español). Tampoco es doblaje: es el idioma original, no las versiones dobladas que se ofrecen.
+  //   - los proveedores de "watch/providers" (JustWatch) traen el nombre de la plataforma y nada más:
+  //     ni pistas de audio ni pistas de subtítulos.
+  //
+  // Así que se retiran, según la regla §1 del proyecto: es preferible un contrato que promete poco y lo
+  // cumple, a uno que promete doblaje y subtítulos y lleva meses entregando listas vacías. El día que
+  // exista una fuente real (la propia plataforma, por ejemplo), entran como campos NUEVOS con números
+  // nuevos y con datos detrás desde el primer día.
+  reserved 3, 4;
+  reserved "dub_languages", "sub_languages";
+}
+
+// Collection representa una saga/colección a la que pertenece el estreno.
+message Collection {
+  string name = 1;                   // nombre de la saga, ej. "Réquiem".
+  repeated CollectionItem items = 2; // entradas de la saga (otras películas/temporadas).
+}
+
+// CollectionItem es una entrada dentro de una saga.
+message CollectionItem {
+  string title = 1;        // título de la entrada.
+  string year = 2;         // año (texto, ej. "2024").
+  string poster_url = 3;   // URL del póster de la entrada.
+  string overview = 4;     // sinopsis de la entrada (peli de la saga o temporada), para su modal.
+  string backdrop_url = 5; // URL de la imagen de fondo (backdrop) de la entrada, para su modal.
+  double rating = 6;       // calificación TMDB (0-10) de la entrada; 0 si no hay nota todavía.
+  string extra = 7;        // dato extra (ej. "8 episodios" en temporadas); vacío si no aplica.
+}
+
+// Credit es una persona acreditada en un estreno: alguien del reparto o del equipo técnico.
+message Credit {
+  string name = 1;      // nombre de la persona.
+  string role = 2;      // papel o función, ej. "Margarita" (personaje) o "Director" (oficio).
+  string photo_url = 3; // URL de la foto (opcional; TMDB no tiene foto de todo el mundo).
+
+  // person_tmdb_id es el NÚMERO DE IDENTIDAD de la persona en TMDB (ej. Matt Smith = 136532).
+  //
+  // Por qué es el campo más importante de este mensaje, en español: hasta ahora una persona se
+  // identificaba por su nombre escrito, y eso rompe de dos formas opuestas. Dos personas distintas que
+  // se llaman igual se funden en una sola (y aparecen conectadas películas que no tienen nada que ver);
+  // y una misma persona escrita de dos maneras se parte en dos (y se pierde la conexión que sí existe).
+  // Con este número, "el mismo actor" deja de ser una coincidencia de letras y pasa a ser un hecho.
+  // Es también lo único que permitirá tener una página propia por persona. Vale 0 si TMDB no lo dio.
+  int32 person_tmdb_id = 4;
+
+  // department es el ÁREA de trabajo de la persona según TMDB, en inglés: "Acting", "Directing",
+  // "Writing", "Sound"…
+  //
+  // Para qué sirve, en español: es la lista cerrada y estable de TMDB con la que se sabe a qué se
+  // dedica una persona dentro de una producción, sin depender de cómo esté escrito su puesto.
+  //
+  // LO QUE ESTE COMENTARIO AFIRMABA Y ERA FALSO: decía que preguntar "¿su área es Directing?"
+  // "acierta siempre" para saber quién dirigió algo. No acierta. Contado sobre el catálogo vigente,
+  // de los 540 créditos con área "Directing" solo 471 son de dirección de verdad (440 "Director" y 31
+  // "Series Director"); los otros 69 —el 12,8 %— son asistentes de dirección (46 entre sus varias
+  // formas), supervisión de guion (7), coordinación (2), dirección de segunda unidad (2), dirección
+  // de acción (2) y algún caso suelto más. Es decir, el área agrupa a TODO EL DEPARTAMENTO de
+  // dirección, no a quien firma la película. Confiar solo en ella habría metido al asistente de
+  // dirección en la lista de directores de uno de cada ocho títulos.
+  //
+  // QUÉ SE HACE ENTONCES, medido antes de decidir: se usan las DOS cosas juntas, el área Y el puesto.
+  // El puesto es el que decide (esa lista da los 471 correctos), y el área actúa de filtro de
+  // seguridad: si TMDB dice que el crédito pertenece a otro departamento, no cuenta como dirección
+  // por mucho que su puesto lleve la palabra "director" —que es el caso, por ejemplo, de "Casting
+  // Director", que vive en Producción—. Sobre los datos de hoy la combinación da exactamente el mismo
+  // resultado que el puesto solo (los 471 créditos con puesto de dirección tienen los 471 el área
+  // Directing), así que no cambia nada de lo que ve el usuario: lo que aporta es cerrar la puerta a
+  // que un puesto ambiguo se cuele el día que la lista de puestos crezca. La implementación y el
+  // trato del área vacía están en internal/catalog/summary.go.
+  string department = 5;
+
+  // episode_count es en CUÁNTOS EPISODIOS participó la persona; solo tiene sentido en series.
+  //
+  // Para qué sirve, en español: en una serie larga, el reparto acumulado mezcla a los protagonistas con
+  // quien salió un rato en un capítulo. Este número permite ordenar por importancia real ("sale en 73 de
+  // 73") en vez de por el orden en que TMDB los devuelva. Vale 0 en películas y cuando no se sabe.
+  int32 episode_count = 6;
+}

@@ -1,0 +1,69 @@
+# Archivo .gitignore del monorepo (en español).
+# Qué es: la lista de cosas que git debe IGNORAR (no subir al repositorio).
+# Por qué: hay archivos que se generan en cada máquina (binarios, dependencias, secretos)
+# y que NO deben viajar en el historial. Aquí los nombramos para que git los deje fuera.
+# OJO importante: NO ignoramos la carpeta "gen/" (código generado desde los .proto) ni los
+# lockfiles (go.sum, pnpm-lock.yaml, buf.lock); esos SÍ se suben para que el build sea
+# reproducible (todos construyen exactamente las mismas versiones).
+
+# --- Go (backend) ---
+# Carpeta temporal que usa "air" para el hot reload y para guardar el binario compilado.
+/backend/tmp/
+# Binario compilado del backend (no se sube; se reconstruye al compilar).
+/backend/api
+# Cobertura de tests de Go.
+*.out
+
+# --- Node / Next.js (frontend web) ---
+# Dependencias instaladas: se reinstalan con pnpm a partir del lockfile.
+node_modules/
+# Almacén local de paquetes de pnpm (content-addressable store). Es una caché grande que
+# pnpm puede crear en el proyecto; nunca debe versionarse. El flujo dockerizado usa su propio
+# volumen, así que esta carpeta solo aparece si se corre pnpm directo en el host.
+.pnpm-store/
+# Archivo de tipos que genera Next.js automáticamente en cada build (no se versiona).
+next-env.d.ts
+# Caché incremental del compilador de TypeScript (se regenera; no se versiona).
+*.tsbuildinfo
+# Carpeta de build de Next.js.
+/web/.next/
+# Carpeta de salida de Next.js (export estático u otros).
+/web/out/
+# Carpeta de build standalone de Next.js.
+/web/.next/standalone/
+
+# --- Secretos y entorno ---
+# Archivo .env con los valores REALES (tokens, keys). NUNCA se sube. Solo se sube .env.example.
+.env
+# Variantes locales de .env por si se usan.
+.env.local
+.env.*.local
+
+# --- Sistema operativo / editores ---
+# Archivo que crea macOS en cada carpeta; ruido que no aporta nada al repo.
+.DS_Store
+
+# Respaldos de seed: no viajan al repo
+backend/seed/*backup*
+
+# Fuera del repo por decision (siguen en disco)
+e2e/*
+!e2e/demo.spec.ts
+!e2e/playwright.config.ts
+docs/
+
+CHANGELOG.md
+
+# Runtime data and environment variants
+.env.*
+!.env.example
+!.env.*.example
+/data/
+/backend/data/
+/web/data/
+**/local-settings.json
+*.db
+*.db-*
+/web/.demo/
+# Demo estática (node web/scripts/build-demo.mjs). Se publica aparte: son cientos de MB.
+/pagina/

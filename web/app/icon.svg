@@ -1,0 +1,14 @@
+<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Favicon de MDM 7mo: hexágono hextech oscuro con play de cine en oro. Next.js (App Router) sirve
+       este app/icon.svg automáticamente como favicon, así que no hace falta favicon.ico (mataba el 404). -->
+  <defs>
+    <linearGradient id="g" x1="6" y1="3" x2="26" y2="29" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#e7cf9a"/>
+      <stop offset="1" stop-color="#c8aa6e"/>
+    </linearGradient>
+  </defs>
+  <!-- Hexágono biselado (clip hextech) con relleno casi negro de la marca. -->
+  <path d="M16 2.2 27.5 8.9V23.1L16 29.8 4.5 23.1V8.9Z" fill="#070809" stroke="url(#g)" stroke-width="1.6" stroke-linejoin="round"/>
+  <!-- Triángulo de reproducción (cine/estreno) en oro. -->
+  <path d="M13 11.4 21.4 16 13 20.6Z" fill="url(#g)"/>
+</svg>

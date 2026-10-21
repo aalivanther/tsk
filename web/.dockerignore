@@ -1,0 +1,34 @@
+# Archivos y carpetas que Docker NO debe copiar al construir la imagen web.
+#
+# En español: este archivo mantiene el "contexto de build" liviano y evita
+# meter en la imagen cosas innecesarias o que se regeneran dentro del propio
+# build (como node_modules o .next). Así el build es más rápido y la imagen
+# más limpia y reproducible.
+
+# Dependencias: se reinstalan dentro de la imagen con pnpm (etapa deps).
+node_modules
+
+# Resultado de compilaciones previas hechas en la máquina local.
+.next
+out
+
+# Variables de entorno locales: nunca deben entrar en la imagen (secretos).
+.env
+.env.*
+!.env.example
+
+# Metadatos de control de versiones y editor.
+.git
+.gitignore
+
+# Archivos basura del sistema operativo.
+.DS_Store
+
+# Logs locales.
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# El propio Dockerfile y su ignore no necesitan copiarse dentro de la imagen.
+Dockerfile
+.dockerignore
