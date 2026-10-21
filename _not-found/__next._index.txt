@@ -1,0 +1,131 @@
+1:"$Sreact.fragment"
+:HL["/tsk/_next/static/css/68dfe27ff345d00f.css","style"]
+:HL["/tsk/_next/static/css/36d2282b615d889d.css","style"]
+2:T1105,
+        /* Contenedor fijo que cubre toda la ventana, detrás del contenido.
+           overflow: hidden es OBLIGATORIO, no decorativo: el grupo de blobs de abajo se desborda a
+           propósito (inset: -20%) para que las nubes de color no muestren sus bordes. Sin recortar
+           aquí, ese desbordamiento AGRANDA el lienzo de la página en móvil y el navegador responde
+           alejando el zoom de TODA la interfaz (se medía un viewport de 526px en un teléfono de
+           393px: la app entera se veía a ~75% de su tamaño). Recortando, el efecto visual es idéntico
+           y el lienzo vuelve a medir lo que mide la pantalla. */
+        .organic-background {
+          position: fixed;
+          inset: 0;
+          z-index: 0;
+          pointer-events: none;
+          overflow: hidden;
+        }
+
+        /* Grupo de blobs: se desborda a propósito (inset negativo) y se difumina
+           fuerte para lograr nubes de color suaves. "screen" mezcla los colores
+           sumando luz, como en el cascarón v3. */
+        .organic-background .blob-field {
+          position: absolute;
+          inset: -20%;
+          filter: blur(72px) saturate(1.15);
+          opacity: 0.85;
+        }
+
+        /* Cada blob es un círculo de gradiente que se mueve en bucle, alternando
+           ida y vuelta, con la curva de movimiento de marca. */
+        .organic-background .blob {
+          position: absolute;
+          border-radius: 50%;
+          mix-blend-mode: screen;
+          animation: organic-drift 26s cubic-bezier(0.22, 0.61, 0.36, 1) infinite
+            alternate;
+        }
+
+        /* Posiciones, tamaños y color de cada uno de los cuatro blobs.
+           Los desfases (animation-delay negativos) hacen que no se muevan todos
+           a la vez, dando una sensación más natural. */
+        .organic-background .blob-1 {
+          width: 60vw;
+          height: 60vw;
+          left: -10%;
+          top: -15%;
+          background: radial-gradient(circle, #1d3a5e, transparent 65%);
+        }
+        .organic-background .blob-2 {
+          width: 55vw;
+          height: 55vw;
+          right: -15%;
+          top: 5%;
+          background: radial-gradient(circle, #3a2150, transparent 65%);
+          animation-delay: -6s;
+        }
+        .organic-background .blob-3 {
+          width: 50vw;
+          height: 50vw;
+          left: 15%;
+          bottom: -25%;
+          background: radial-gradient(circle, #0e4a44, transparent 65%);
+          animation-delay: -12s;
+        }
+        .organic-background .blob-4 {
+          width: 40vw;
+          height: 40vw;
+          right: 5%;
+          bottom: -10%;
+          background: radial-gradient(circle, #5a4420, transparent 70%);
+          animation-delay: -18s;
+        }
+
+        /* Deriva: un desplazamiento y escalado mínimos para que los blobs
+           "respiren" muy despacio sin distraer. */
+        @keyframes organic-drift {
+          0% {
+            transform: translate(0, 0) scale(1);
+          }
+          100% {
+            transform: translate(4%, -3%) scale(1.12);
+          }
+        }
+
+        /* Capa de grano: el ruido SVG repetido, casi invisible (opacidad baja),
+           que añade textura de "película" sobre los blobs. */
+        .organic-background .grain {
+          position: absolute;
+          inset: 0;
+          opacity: 0.04;
+          background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+        }
+
+        /* Viñeta: oscurece progresivamente de arriba hacia los bordes para
+           enfocar la atención en el contenido. */
+        .organic-background .vignette {
+          position: absolute;
+          inset: 0;
+          background: radial-gradient(
+            120% 90% at 50% 0%,
+            transparent 40%,
+            rgba(7, 8, 9, 0.7) 100%
+          );
+        }
+
+        /* Accesibilidad: si la persona pidió menos movimiento, congelamos los
+           blobs (sin animación). El fondo conserva su color y composición. */
+        @media (prefers-reduced-motion: reduce) {
+          .organic-background .blob {
+            animation: none;
+          }
+        }
+      6:X
+0:{"t":{"t":{"s":"","h":16,"d":{"r":["$","$1","c",{"children":[[["$","link","0",{"rel":"stylesheet","href":"/tsk/_next/static/css/68dfe27ff345d00f.css","precedence":"next"}],["$","link","1",{"rel":"stylesheet","href":"/tsk/_next/static/css/36d2282b615d889d.css","precedence":"next"}]],["$","html",null,{"lang":"es-MX","suppressHydrationWarning":true,"data-theme":"dark","className":"__variable_227947 __variable_772268 __variable_009a1a __variable_3ac8d5 __variable_827f25","children":["$","body",null,{"children":[["$","script",null,{"suppressHydrationWarning":true,"dangerouslySetInnerHTML":{"__html":"try{var t=localStorage.getItem('tsk-theme')||localStorage.getItem('mdm7mo-theme');if(t==='light'||t==='dark'){document.documentElement.dataset.theme=t;}}catch(e){}"}}],[["$","style",null,{"children":"$2"}],"$L3"],"$L4"]}]}]]}],"p":"$@5","v":null,"s":"$6"}}},"a":"$@7","u":"$@8","b":"RMlGUG6Men0jntfNPRUsq"}
+9:"static/chunks/533-16222b1148079b25.js"
+a:"static/chunks/702-65df825e7a0a4a25.js"
+b:"static/chunks/app/layout-805f1722ecf34ab4.js"
+c:I[1692,["533","$9","702","$a","177","$b"],"Providers"]
+d:I[4069,[],""]
+e:"static/chunks/403-8c461d18059e20f3.js"
+f:"static/chunks/app/error-6106b3ad709d8a5f.js"
+10:I[7020,["403","$e","39","$f"],"default"]
+11:I[49,[],""]
+3:["$","div",null,{"className":"organic-background","aria-hidden":"true","children":[["$","div",null,{"className":"blob-field","children":[["$","div",null,{"className":"blob blob-1"}],["$","div",null,{"className":"blob blob-2"}],["$","div",null,{"className":"blob blob-3"}],["$","div",null,{"className":"blob blob-4"}]]}],["$","div",null,{"className":"grain"}],["$","div",null,{"className":"vignette"}]]}]
+4:["$","$Lc",null,{"children":["$","div",null,{"className":"app-shell relative z-[1]","children":[["$","aside",null,{"className":"font-mono px-4 py-2 text-center text-xs text-gold","aria-label":"Modo demo","children":"DEMO · Catálogo fijo al 12 oct 2026 · 448 títulos · El perfil se guarda en este navegador"}],["$","$Ld",null,{"parallelRouterKey":"children","error":"$10","errorStyles":[],"errorScripts":null,"template":["$","$L11",null,{}]}]]}]}]
+6:300
+8:true
+6:C
+7:0
+5:"$undefined"

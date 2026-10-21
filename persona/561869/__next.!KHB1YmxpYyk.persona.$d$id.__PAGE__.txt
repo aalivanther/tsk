@@ -1,0 +1,42 @@
+2:"$Sreact.fragment"
+3:I[4069,[],""]
+4:I[49,[],""]
+5:"static/chunks/704-0c9996f4ad9eaf74.js"
+6:"static/chunks/681-ea2698198c24e40c.js"
+7:"static/chunks/app/(public)/layout-7bbf06385f9ef026.js"
+8:I[7681,["704","$5","681","$6","816","$7"],"Image"]
+9:"static/chunks/app/(public)/persona/%5Bid%5D/not-found-da2c8ba3751c63d4.js"
+a:I[9704,["704","$5","901","$9"],""]
+13:"static/chunks/533-16222b1148079b25.js"
+14:"static/chunks/403-8c461d18059e20f3.js"
+15:"static/chunks/702-65df825e7a0a4a25.js"
+16:"static/chunks/472-40b349ef41eb7c35.js"
+17:"static/chunks/404-a8d330b222f1f366.js"
+18:"static/chunks/339-87e1b40f96483dc0.js"
+19:"static/chunks/app/(public)/persona/%5Bid%5D/page-75fc82c92950eabe.js"
+1a:I[6453,["704","$5","533","$13","403","$14","702","$15","472","$16","404","$17","339","$18","930","$19"],"PersonScreen"]
+1b:I[9608,[],"OutletBoundary"]
+1c:"$Sreact.suspense"
+1f:"ViewportBoundary"
+20:I[9608,[],"$1f"]
+21:"MetadataBoundary"
+22:I[9608,[],"$21"]
+23:I[5521,[],"IconMark"]
+c:X
+f:X
+f:C
+12:[["children",{"s":"__PAGE__","h":160,"d":{"r":["$","$2","c",{"children":[["$","$L1a",null,{"id":"561869"}],null,["$","$L1b",null,{"children":["$","$1c",null,{"name":"Next.MetadataOutlet","children":"$@1d"}]}]]}],"p":"$@1e","v":null,"s":"$c"}}]]
+10:[["children",{"s":{"n":"id","t":"d","k":"561869","s":[]},"h":65632,"d":{"r":["$","$2","c",{"children":[null,["$","$L3",null,{"parallelRouterKey":"children","template":["$","$L4",null,{}],"notFound":[["$","main",null,{"className":"pd-main is-centered font-ui","children":[["$","$La",null,{"href":"/","className":"pd-back font-mono","children":[["$","span",null,{"aria-hidden":"true","children":"‹"}]," ","Volver a estrenos"]}],["$","h1",null,{"className":"pd-name font-display","children":"Persona no encontrada"}],["$","p",null,{"className":"pd-section-hint","children":"No encontramos a esta persona en el catálogo. Es posible que el enlace esté roto o que sus títulos ya no estén en la ventana de meses que mostramos."}]]}],[]]}]]}],"p":"$@11","v":"$f","s":"$c"},"c":"$Q12"}]]
+d:[["children",{"s":"persona","h":131168,"d":{"r":["$","$2","c",{"children":[null,["$","$L3",null,{"parallelRouterKey":"children","template":["$","$L4",null,{}]}]]}],"p":"$@e","v":"$f","s":"$c"},"c":"$Q10"}]]
+1:[["children",{"s":"(public)","h":131136,"d":{"r":["$","$2","c",{"children":[null,[["$","$L3",null,{"parallelRouterKey":"children","template":["$","$L4",null,{}],"notFound":[[["$","title",null,{"children":"404: This page could not be found."}],["$","div",null,{"style":{"fontFamily":"system-ui,\"Segoe UI\",Roboto,Helvetica,Arial,sans-serif,\"Apple Color Emoji\",\"Segoe UI Emoji\"","height":"100vh","textAlign":"center","display":"flex","flexDirection":"column","alignItems":"center","justifyContent":"center"},"children":["$","div",null,{"children":[["$","style",null,{"dangerouslySetInnerHTML":{"__html":"body{color:#000;background:#fff;margin:0}.next-error-h1{border-right:1px solid rgba(0,0,0,.3)}@media (prefers-color-scheme:dark){body{color:#fff;background:#000}.next-error-h1{border-right:1px solid rgba(255,255,255,.3)}}"}}],["$","h1",null,{"className":"next-error-h1","style":{"display":"inline-block","margin":"0 20px 0 0","padding":"0 23px 0 0","fontSize":24,"fontWeight":500,"verticalAlign":"top","lineHeight":"49px"},"children":404}],["$","div",null,{"style":{"display":"inline-block"},"children":["$","h2",null,{"style":{"fontSize":14,"fontWeight":400,"lineHeight":"49px","margin":0},"children":"This page could not be found."}]}]]}]}]],[]]}],["$","footer",null,{"className":"font-ui mt-8 flex flex-col justify-between gap-4 px-4 py-10 text-xs text-text-subtle sm:flex-row sm:px-10","style":{"borderTop":"1px solid var(--color-border-soft)"},"children":[["$","div",null,{"className":"flex max-w-[560px] flex-col gap-3 leading-relaxed","aria-label":"Créditos","children":[["$","div",null,{"className":"flex items-start gap-3","children":[["$","a",null,{"href":"https://www.themoviedb.org","children":["$","$L8",null,{"src":"/tsk/tmdb.svg","width":77,"height":10,"alt":"The Movie Database (TMDB)","unoptimized":true}]}],["$","span",null,{"lang":"en","children":"This product uses the TMDB API but is not endorsed or certified by TMDB."}]]}],["$","p",null,{"children":"Información de disponibilidad («dónde verlo») proporcionada por JustWatch."}],["$","p",null,{"children":"Calificaciones provistas por OMDb (CC BY-NC 4.0). No avalado por IMDb.com ni afiliado a IMDb."}]]}],["$","div",null,{"className":"flex shrink-0 flex-col gap-3 self-start","children":[["$","nav",null,{"aria-label":"Enlaces legales","className":"flex flex-col gap-2","children":["$","$La",null,{"href":"/privacidad","className":"font-mono tracking-[0.08em] text-text-muted underline-offset-4 transition-colors hover:text-gold","children":"Aviso de privacidad"}]}],["$","p",null,{"className":"font-mono tracking-[0.08em]","children":"MX · es-MX"}]]}]]}]]]}],"p":"$@b","v":null,"s":"$c"},"c":"$Qd"}]]
+0:{"t":{"t":{"s":"","h":131088,"c":"$Q1"},"h":{"r":["$","$2","h",{"children":[null,["$","$L20",null,{"children":[["$","meta","0",{"charSet":"utf-8"}],["$","meta","1",{"name":"viewport","content":"width=device-width, initial-scale=1, viewport-fit=cover"}],["$","meta","2",{"name":"theme-color","content":"#070809","media":"(prefers-color-scheme: dark)"}],["$","meta","3",{"name":"theme-color","content":"#f6f7f9","media":"(prefers-color-scheme: light)"}]]}],["$","$L22",null,{"children":[["$","div",null,{"hidden":true,"children":["$","$1c",null,{"name":"Next.Metadata","children":[["$","title","0",{"children":"The Story Keeper"}],["$","meta","1",{"name":"description","content":"The Story Keeper: agregador de estrenos de cine, streaming y cadenas, con una línea de tiempo navegable de lo que viene."}],["$","meta","2",{"name":"application-name","content":"The Story Keeper"}],["$","link","3",{"rel":"manifest","href":"/tsk/manifest.webmanifest"}],["$","meta","4",{"name":"format-detection","content":"telephone=no, date=no, address=no, email=no"}],["$","meta","5",{"name":"mobile-web-app-capable","content":"yes"}],["$","meta","6",{"name":"apple-mobile-web-app-title","content":"Story Keeper"}],["$","meta","7",{"name":"apple-mobile-web-app-status-bar-style","content":"black-translucent"}],["$","link","8",{"rel":"icon","href":"/tsk/favicon-32.png","sizes":"32x32","type":"image/png"}],["$","link","9",{"rel":"icon","href":"/tsk/icon-192.png","sizes":"192x192","type":"image/png"}],["$","link","10",{"rel":"icon","href":"/tsk/icon-512.png","sizes":"512x512","type":"image/png"}],["$","link","11",{"rel":"apple-touch-icon","href":"/tsk/apple-icon.png","sizes":"180x180","type":"image/png"}],["$","$L23","12",{}]]}]}],null]}],["$","meta",null,{"name":"next-size-adjust","content":""}]]}],"p":"$@24","v":null,"s":"$c"}},"a":"$@25","u":"$@26","b":"RMlGUG6Men0jntfNPRUsq"}
+1d:null
+26:true
+c:300
+c:C
+25:0
+11:"$undefined"
+e:"$undefined"
+b:"$undefined"
+24:"$undefined"
+1e:"$undefined"

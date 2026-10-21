@@ -1,0 +1,147 @@
+1:"$Sreact.fragment"
+4:I[4069,[],""]
+5:I[49,[],""]
+8:I[9608,[],"OutletBoundary"]
+9:"$Sreact.suspense"
+b:"ViewportBoundary"
+c:I[9608,[],"$b"]
+e:"MetadataBoundary"
+f:I[9608,[],"$e"]
+11:"static/chunks/app/global-error-8b7ac9eb2d83437f.js"
+12:I[1882,["219","$11"],"default"]
+:HL["/tsk/_next/static/media/1f45c7fca1a7b38b-s.p.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["/tsk/_next/static/media/3835a68e46c991a5-s.p.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["/tsk/_next/static/media/55a1343a9a5db6d9-s.p.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["/tsk/_next/static/media/9c9751ca111e97c2-s.p.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["/tsk/_next/static/media/cdf4d54b96606b42-s.p.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["/tsk/_next/static/css/68dfe27ff345d00f.css","style"]
+:HL["/tsk/_next/static/css/36d2282b615d889d.css","style"]
+6:X
+7:[["children",{"s":"__PAGE__","h":512,"d":{"r":["$","$1","c",{"children":[[["$","title",null,{"children":"404: This page could not be found."}],["$","div",null,{"style":{"fontFamily":"system-ui,\"Segoe UI\",Roboto,Helvetica,Arial,sans-serif,\"Apple Color Emoji\",\"Segoe UI Emoji\"","height":"100vh","textAlign":"center","display":"flex","flexDirection":"column","alignItems":"center","justifyContent":"center"},"children":["$","div",null,{"children":[["$","style",null,{"dangerouslySetInnerHTML":{"__html":"body{color:#000;background:#fff;margin:0}.next-error-h1{border-right:1px solid rgba(0,0,0,.3)}@media (prefers-color-scheme:dark){body{color:#fff;background:#000}.next-error-h1{border-right:1px solid rgba(255,255,255,.3)}}"}}],["$","h1",null,{"className":"next-error-h1","style":{"display":"inline-block","margin":"0 20px 0 0","padding":"0 23px 0 0","fontSize":24,"fontWeight":500,"verticalAlign":"top","lineHeight":"49px"},"children":404}],["$","div",null,{"style":{"display":"inline-block"},"children":["$","h2",null,{"style":{"fontSize":14,"fontWeight":400,"lineHeight":"49px","margin":0},"children":"This page could not be found."}]}]]}]}]],null,["$","$L8",null,{"children":["$","$9",null,{"name":"Next.MetadataOutlet","children":"$@a"}]}]]}],"p":false,"v":null}}]]
+3:[["children",{"s":"_not-found","h":512,"d":{"r":["$","$1","c",{"children":[null,["$","$L4",null,{"parallelRouterKey":"children","error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L5",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":"$undefined","forbidden":"$undefined","unauthorized":"$undefined"}]]}],"p":false,"v":"$6"},"c":"$Q7"}]]
+0:{"P":null,"c":["","_not-found",""],"q":"","i":false,"t":{"t":{"s":"","h":528,"d":{"r":["$","$1","c",{"children":[[["$","link","0",{"rel":"stylesheet","href":"/tsk/_next/static/css/68dfe27ff345d00f.css","precedence":"next","crossOrigin":"$undefined","nonce":"$undefined"}],["$","link","1",{"rel":"stylesheet","href":"/tsk/_next/static/css/36d2282b615d889d.css","precedence":"next","crossOrigin":"$undefined","nonce":"$undefined"}]],"$L2"]}],"p":false,"v":null},"c":"$Q3"},"h":{"r":["$","$1","h",{"children":[["$","meta",null,{"name":"robots","content":"noindex"}],["$","$Lc",null,{"children":"$Ld"}],["$","$Lf",null,{"children":[["$","div",null,{"hidden":true,"children":["$","$9",null,{"name":"Next.Metadata","children":"$L10"}]}],null]}],["$","meta",null,{"name":"next-size-adjust","content":""}]]}],"p":false,"v":null}},"m":"$undefined","G":["$12",[]],"S":true,"r":"$undefined","s":"$undefined","a":"$undefined","l":"$undefined","p":"$undefined","d":"$undefined","b":"RMlGUG6Men0jntfNPRUsq"}
+6:C
+13:T1105,
+        /* Contenedor fijo que cubre toda la ventana, detrás del contenido.
+           overflow: hidden es OBLIGATORIO, no decorativo: el grupo de blobs de abajo se desborda a
+           propósito (inset: -20%) para que las nubes de color no muestren sus bordes. Sin recortar
+           aquí, ese desbordamiento AGRANDA el lienzo de la página en móvil y el navegador responde
+           alejando el zoom de TODA la interfaz (se medía un viewport de 526px en un teléfono de
+           393px: la app entera se veía a ~75% de su tamaño). Recortando, el efecto visual es idéntico
+           y el lienzo vuelve a medir lo que mide la pantalla. */
+        .organic-background {
+          position: fixed;
+          inset: 0;
+          z-index: 0;
+          pointer-events: none;
+          overflow: hidden;
+        }
+
+        /* Grupo de blobs: se desborda a propósito (inset negativo) y se difumina
+           fuerte para lograr nubes de color suaves. "screen" mezcla los colores
+           sumando luz, como en el cascarón v3. */
+        .organic-background .blob-field {
+          position: absolute;
+          inset: -20%;
+          filter: blur(72px) saturate(1.15);
+          opacity: 0.85;
+        }
+
+        /* Cada blob es un círculo de gradiente que se mueve en bucle, alternando
+           ida y vuelta, con la curva de movimiento de marca. */
+        .organic-background .blob {
+          position: absolute;
+          border-radius: 50%;
+          mix-blend-mode: screen;
+          animation: organic-drift 26s cubic-bezier(0.22, 0.61, 0.36, 1) infinite
+            alternate;
+        }
+
+        /* Posiciones, tamaños y color de cada uno de los cuatro blobs.
+           Los desfases (animation-delay negativos) hacen que no se muevan todos
+           a la vez, dando una sensación más natural. */
+        .organic-background .blob-1 {
+          width: 60vw;
+          height: 60vw;
+          left: -10%;
+          top: -15%;
+          background: radial-gradient(circle, #1d3a5e, transparent 65%);
+        }
+        .organic-background .blob-2 {
+          width: 55vw;
+          height: 55vw;
+          right: -15%;
+          top: 5%;
+          background: radial-gradient(circle, #3a2150, transparent 65%);
+          animation-delay: -6s;
+        }
+        .organic-background .blob-3 {
+          width: 50vw;
+          height: 50vw;
+          left: 15%;
+          bottom: -25%;
+          background: radial-gradient(circle, #0e4a44, transparent 65%);
+          animation-delay: -12s;
+        }
+        .organic-background .blob-4 {
+          width: 40vw;
+          height: 40vw;
+          right: 5%;
+          bottom: -10%;
+          background: radial-gradient(circle, #5a4420, transparent 70%);
+          animation-delay: -18s;
+        }
+
+        /* Deriva: un desplazamiento y escalado mínimos para que los blobs
+           "respiren" muy despacio sin distraer. */
+        @keyframes organic-drift {
+          0% {
+            transform: translate(0, 0) scale(1);
+          }
+          100% {
+            transform: translate(4%, -3%) scale(1.12);
+          }
+        }
+
+        /* Capa de grano: el ruido SVG repetido, casi invisible (opacidad baja),
+           que añade textura de "película" sobre los blobs. */
+        .organic-background .grain {
+          position: absolute;
+          inset: 0;
+          opacity: 0.04;
+          background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+        }
+
+        /* Viñeta: oscurece progresivamente de arriba hacia los bordes para
+           enfocar la atención en el contenido. */
+        .organic-background .vignette {
+          position: absolute;
+          inset: 0;
+          background: radial-gradient(
+            120% 90% at 50% 0%,
+            transparent 40%,
+            rgba(7, 8, 9, 0.7) 100%
+          );
+        }
+
+        /* Accesibilidad: si la persona pidió menos movimiento, congelamos los
+           blobs (sin animación). El fondo conserva su color y composición. */
+        @media (prefers-reduced-motion: reduce) {
+          .organic-background .blob {
+            animation: none;
+          }
+        }
+      2:["$","html",null,{"lang":"es-MX","suppressHydrationWarning":true,"data-theme":"dark","className":"__variable_227947 __variable_772268 __variable_009a1a __variable_3ac8d5 __variable_827f25","children":["$","body",null,{"children":[["$","script",null,{"suppressHydrationWarning":true,"dangerouslySetInnerHTML":{"__html":"try{var t=localStorage.getItem('tsk-theme')||localStorage.getItem('mdm7mo-theme');if(t==='light'||t==='dark'){document.documentElement.dataset.theme=t;}}catch(e){}"}}],[["$","style",null,{"children":"$13"}],"$L14"],"$L15"]}]}]
+16:"static/chunks/533-16222b1148079b25.js"
+17:"static/chunks/702-65df825e7a0a4a25.js"
+18:"static/chunks/app/layout-805f1722ecf34ab4.js"
+19:I[1692,["533","$16","702","$17","177","$18"],"Providers"]
+1a:"static/chunks/403-8c461d18059e20f3.js"
+1b:"static/chunks/app/error-6106b3ad709d8a5f.js"
+1c:I[7020,["403","$1a","39","$1b"],"default"]
+14:["$","div",null,{"className":"organic-background","aria-hidden":"true","children":[["$","div",null,{"className":"blob-field","children":[["$","div",null,{"className":"blob blob-1"}],["$","div",null,{"className":"blob blob-2"}],["$","div",null,{"className":"blob blob-3"}],["$","div",null,{"className":"blob blob-4"}]]}],["$","div",null,{"className":"grain"}],["$","div",null,{"className":"vignette"}]]}]
+15:["$","$L19",null,{"children":["$","div",null,{"className":"app-shell relative z-[1]","children":[["$","aside",null,{"className":"font-mono px-4 py-2 text-center text-xs text-gold","aria-label":"Modo demo","children":"DEMO · Catálogo fijo al 12 oct 2026 · 448 títulos · El perfil se guarda en este navegador"}],["$","$L4",null,{"parallelRouterKey":"children","error":"$1c","errorStyles":[],"errorScripts":null,"template":["$","$L5",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":"$undefined","forbidden":"$undefined","unauthorized":"$undefined"}]]}]}]
+d:[["$","meta","0",{"charSet":"utf-8"}],["$","meta","1",{"name":"viewport","content":"width=device-width, initial-scale=1, viewport-fit=cover"}],["$","meta","2",{"name":"theme-color","content":"#070809","media":"(prefers-color-scheme: dark)"}],["$","meta","3",{"name":"theme-color","content":"#f6f7f9","media":"(prefers-color-scheme: light)"}]]
+1d:I[5521,[],"IconMark"]
+a:null
+10:[["$","title","0",{"children":"The Story Keeper"}],["$","meta","1",{"name":"description","content":"The Story Keeper: agregador de estrenos de cine, streaming y cadenas, con una línea de tiempo navegable de lo que viene."}],["$","meta","2",{"name":"application-name","content":"The Story Keeper"}],["$","link","3",{"rel":"manifest","href":"/tsk/manifest.webmanifest","crossOrigin":"$undefined"}],["$","meta","4",{"name":"format-detection","content":"telephone=no, date=no, address=no, email=no"}],["$","meta","5",{"name":"mobile-web-app-capable","content":"yes"}],["$","meta","6",{"name":"apple-mobile-web-app-title","content":"Story Keeper"}],["$","meta","7",{"name":"apple-mobile-web-app-status-bar-style","content":"black-translucent"}],["$","link","8",{"rel":"icon","href":"/tsk/favicon-32.png","sizes":"32x32","type":"image/png"}],["$","link","9",{"rel":"icon","href":"/tsk/icon-192.png","sizes":"192x192","type":"image/png"}],["$","link","10",{"rel":"icon","href":"/tsk/icon-512.png","sizes":"512x512","type":"image/png"}],["$","link","11",{"rel":"apple-touch-icon","href":"/tsk/apple-icon.png","sizes":"180x180","type":"image/png"}],["$","$L1d","12",{}]]
