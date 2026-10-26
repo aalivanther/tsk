@@ -37,6 +37,8 @@ export default function PrivacidadPage(): JSX.Element {
       {/* Enlace de regreso: va primero para que sea lo primero que encuentre quien navega con Tab. */}
       <Link
         href="/"
+        prefetch={false}
+        data-intent-prefetch="/"
         className="font-mono inline-flex w-fit items-center gap-2 text-xs tracking-[0.08em] text-gold no-underline transition-colors hover:text-gold-bright"
       >
         {/* La flecha es decorativa; el texto comunica la acción. */}

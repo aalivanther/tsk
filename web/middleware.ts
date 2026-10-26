@@ -70,6 +70,10 @@ function buildContentSecurityPolicy(nonce: string): string {
     `connect-src ${connectSources}`,
     "font-src 'self' data:",
     "frame-src https://www.youtube-nocookie.com",
+    // worker-src: el polvo del fondo se pinta en un worker propio (components/particles), servido
+    // desde este mismo sitio. Se declara explícito para no depender de cómo cada navegador aplica
+    // 'strict-dynamic' a los workers; si aun así se bloqueara, el polvo vuelve al hilo principal.
+    "worker-src 'self'",
     "object-src 'none'",
     "base-uri 'self'",
     "frame-ancestors 'self'",

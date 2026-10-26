@@ -23,6 +23,7 @@ import Background from "@/components/Background";
 // Providers envuelve la app con el estado compartido del cliente (TanStack Query
 // y el transporte de Connect).
 import { Providers } from "@/components/Providers";
+import { IntentPrefetch } from "@/components/IntentPrefetch";
 import { setupPending } from "@/lib/local-setup";
 
 // Fraunces: fuente DISPLAY del producto (serif de cartel de cine clásico) para los TÍTULOS de estrenos,
@@ -209,6 +210,9 @@ export default async function RootLayout({
             resuelve aquí, en un solo sitio, y no pantalla por pantalla.
           */}
           <div className="app-shell relative z-[1]">{children}</div>
+          {/* Adelanta los enlaces de navegación marcados (data-intent-prefetch) solo cuando hay
+              intención de abrirlos: ver IntentPrefetch. */}
+          <IntentPrefetch />
         </Providers>
       </body>
     </html>

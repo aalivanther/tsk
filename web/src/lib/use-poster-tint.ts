@@ -33,11 +33,20 @@ const tintCache = new Map<string, string | null>();
 // a todas sus imágenes, así que dar el permiso no cuesta nada. Esta llamada se hace durante el render
 // (no en un efecto) a propósito: React la convierte en una etiqueta <link rel="preload"> en la cabecera
 // del documento, que sale ANTES que el estilo de fondo, y así es la que gana la carrera.
-export function preloadTintableImage(imageUrl: string): void {
+//
+// Medido después: aun así el fondo CSS volvía a pedirse sin permiso (la reserva y el fondo no
+// comparten copia), así que quien pinta estas imágenes ahora lo hace con una <img crossOrigin> (ver
+// BackdropImage en GlobalBackground). La reserva sigue sirviendo para adelantar la descarga;
+// fetchPriority "high" se usa para la imagen que se ve al abrir la pantalla.
+export function preloadTintableImage(imageUrl: string, fetchPriority?: "high" | "low"): void {
   if (imageUrl === "") {
     return;
   }
-  preload(imageUrl, { as: "image", crossOrigin: "anonymous" });
+  preload(imageUrl, {
+    as: "image",
+    crossOrigin: "anonymous",
+    ...(fetchPriority !== undefined ? { fetchPriority } : {}),
+  });
 }
 
 // usePosterTint devuelve el color dominante (hex) de la imagen dada, o null mientras carga / si falla.

@@ -7883,3 +7883,69 @@ html[data-theme="light"] .tlx-bell-panel {
 .rf-saga-page-link:hover {
   text-decoration: underline;
 }
+
+/*
+  =====================================================================================
+  PORTADA: LAS DOS PRESENTACIONES MIENTRAS SE MIDE LA PANTALLA — .tlx-view
+  En español: hasta que el navegador mide el ancho (useIsMobile), la portada escribe la espina de
+  escritorio Y la agenda del teléfono, y aquí se enseña solo la que toca, con el mismo punto de
+  corte que el hook (768px). Así el teléfono ya no ve la espina horizontal el primer segundo. En
+  cuanto se mide, React deja montada solo una y data-pending desaparece. El envoltorio no dibuja
+  caja propia (display: contents): los carriles y la agenda siguen siendo hijos directos de la
+  maqueta de .tlx-lanes, como antes.
+  =====================================================================================
+*/
+.tlx-view {
+  display: contents;
+}
+@media (max-width: 768px) {
+  .tlx-view-desktop[data-pending] {
+    display: none;
+  }
+}
+@media not all and (max-width: 768px) {
+  .tlx-view-mobile[data-pending] {
+    display: none;
+  }
+}
+
+/* Banner de la agenda como <img> perezosa (AgendaMobile): se estira a toda la fila y se recorta igual
+   que lo hacía el fondo CSS (cover, centrado). Opacidad y velo siguen siendo los de .ag-pkg-banner. */
+img.ag-pkg-banner {
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  object-fit: cover;
+  object-position: center;
+}
+
+/* Mapa personal mientras se lee el perfil del navegador (PersonalGraphView): el pie de página no se
+   dibuja hasta que llega el contenido. Antes aparecía pegado al aviso de "cargando" y saltaba hacia
+   abajo al llegar el mapa: era casi todo el desplazamiento de maquetación (CLS) de esta pantalla. No
+   se reserva ningún alto a propósito: lo que llega (mapa, lista o estado vacío) mide distinto según
+   el perfil, y cualquier reserva cambiaría cómo queda la página. Sin soporte de :has(), todo queda
+   como antes. */
+.app-shell:has(.pg-pending) > footer {
+  visibility: hidden;
+}
+
+/* Fondos pintados como <img crossOrigin> (BackdropImage) en vez de fondo CSS, para que una sola
+   descarga sirva para pintarlos y para sacarles el color. La imagen cubre su capa y se recorta igual
+   que el fondo de antes (cover, centrada). z-index -1 la deja en el sitio del fondo: dentro de su capa
+   (que ya forma su propio contexto de apilamiento por el filtro), por debajo de los ::before/::after
+   que la cubren (velos y neblina). */
+.bg-cover-img {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  object-fit: cover;
+  object-position: center;
+  pointer-events: none;
+}
+/* El ambiente de la ficha encuadra su fondo un poco por encima del centro (.td-ambient). */
+.td-ambient-img {
+  object-position: center 16%;
+}

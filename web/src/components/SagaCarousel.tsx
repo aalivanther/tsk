@@ -26,7 +26,7 @@ import { createPortal } from "react-dom";
 import { useDialogEscape } from "@/lib/dialog-stack";
 import { useDragScroll } from "@/lib/use-drag-scroll";
 import { useFocusTrap } from "@/lib/use-focus-trap";
-import { coverStyleFor } from "@/lib/timeline";
+import { COVER_SIZES, coverStyleFor } from "@/lib/timeline";
 import { resolveCollectionItem } from "@/lib/saga";
 import { ui } from "@/lib/i18n";
 import { type CollectionItem, type ReleaseSummary } from "@/gen/mdm7mo/catalog/v1/catalog_pb";
@@ -221,7 +221,7 @@ export function SagaCarousel({
         <div
           className="rf-saga-poster"
           style={{
-            ...coverStyleFor(item.posterUrl, baseSeed + index),
+            ...coverStyleFor(item.posterUrl, baseSeed + index, 1, COVER_SIZES.sagaPoster),
             borderColor: "var(--color-border)",
           }}
         >

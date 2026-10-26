@@ -107,13 +107,16 @@ export type ProfileState = {
 
 // localIsoDate devuelve la fecha de HOY como "AAAA-MM-DD" en la zona horaria de México (la del
 // producto), con el mismo truco en-CA que usa la línea de tiempo (formato ISO directo, sin ambigüedad).
+// El formateador se crea UNA vez: construir un Intl.DateTimeFormat es caro (carga datos de zona y
+// de idioma) y esta función se llama en cada perfil por defecto que se arma.
+const MEXICO_ISO_DATE = new Intl.DateTimeFormat("en-CA", {
+  timeZone: "America/Mexico_City",
+  year: "numeric",
+  month: "2-digit",
+  day: "2-digit",
+});
 function localIsoDate(): string {
-  return new Intl.DateTimeFormat("en-CA", {
-    timeZone: "America/Mexico_City",
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-  }).format(new Date());
+  return MEXICO_ISO_DATE.format(new Date());
 }
 
 // makeDefaultProfile crea el estado inicial (perfil vacío, idioma español, alta HOY).

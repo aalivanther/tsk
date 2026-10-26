@@ -258,11 +258,24 @@ function buildSpriteSamples(stops: readonly SpriteStop[]): SpriteStop[] {
 // posiciones que toquen, que es muchísimo más barato que redibujar el degradado 240 veces por fotograma.
 // Devuelve null si el navegador no da un lienzo de dos dimensiones (entonces no hay fondo decorativo,
 // y la página funciona exactamente igual: esto es adorno).
-export function createParticleSprite(tone: ParticleTone): HTMLCanvasElement | null {
-  const canvas = document.createElement("canvas");
+//
+// createCanvas decide en qué lienzo se dibuja el sello: un <canvas> de la página o, cuando el polvo se
+// pinta en un hilo aparte (ver particle-worker.ts), un OffscreenCanvas. El dibujo es el mismo.
+export type ParticleSprite = HTMLCanvasElement | OffscreenCanvas;
+type ParticleContext = CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D;
+
+function createDocumentCanvas(): HTMLCanvasElement {
+  return document.createElement("canvas");
+}
+
+export function createParticleSprite(
+  tone: ParticleTone,
+  createCanvas: () => ParticleSprite = createDocumentCanvas,
+): ParticleSprite | null {
+  const canvas = createCanvas();
   canvas.width = SPRITE_TEXTURE_PIXELS;
   canvas.height = SPRITE_TEXTURE_PIXELS;
-  const context = canvas.getContext("2d");
+  const context = canvas.getContext("2d") as ParticleContext | null;
   if (context === null) {
     return null;
   }
@@ -288,9 +301,23 @@ export function createParticleSprite(tone: ParticleTone): HTMLCanvasElement | nu
 // resizeParticleCanvas ajusta el lienzo al tamaño real que ocupa en la página y a la densidad de la
 // pantalla. Devuelve la densidad aplicada, que hace falta para dibujar después en píxeles "de CSS".
 export function resizeParticleCanvas(canvas: HTMLCanvasElement): number {
-  const cssWidth = canvas.clientWidth;
-  const cssHeight = canvas.clientHeight;
-  const pixelRatio = Math.min(window.devicePixelRatio || 1, MAX_PIXEL_RATIO);
+  return applyParticleCanvasSize(
+    canvas,
+    canvas.clientWidth,
+    canvas.clientHeight,
+    window.devicePixelRatio || 1,
+  );
+}
+
+// applyParticleCanvasSize es la cuenta de resizeParticleCanvas sin leer la página: recibe el tamaño
+// en CSS y la densidad, para que el hilo aparte (que no ve la página) haga exactamente lo mismo.
+export function applyParticleCanvasSize(
+  canvas: HTMLCanvasElement | OffscreenCanvas,
+  cssWidth: number,
+  cssHeight: number,
+  devicePixelRatio: number,
+): number {
+  const pixelRatio = Math.min(devicePixelRatio, MAX_PIXEL_RATIO);
   const targetWidth = Math.max(1, Math.floor(cssWidth * pixelRatio));
   const targetHeight = Math.max(1, Math.floor(cssHeight * pixelRatio));
   // Solo se reasigna si cambió: escribir width/height BORRA el lienzo, y hacerlo en cada fotograma
@@ -309,8 +336,8 @@ export function resizeParticleCanvas(canvas: HTMLCanvasElement): number {
 // píxeles de pantalla; sale del ángulo de visión de la cámara y de la altura de la ventana. Son las
 // mismas fórmulas que aplicaba la tarjeta gráfica con three.js, escritas a mano.
 export function drawParticleField(
-  context: CanvasRenderingContext2D,
-  sprite: HTMLCanvasElement,
+  context: ParticleContext,
+  sprite: ParticleSprite,
   field: ParticleField,
   tone: ParticleTone,
   rotationRadians: number,

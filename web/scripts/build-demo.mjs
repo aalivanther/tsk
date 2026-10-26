@@ -68,6 +68,11 @@ for (const [from, to] of [
   await cp(join(web, "demo", from), join(stage, to));
 }
 
+// El perfil de la demo no se sincroniza con ningún servidor: profile-sync se cambia por su versión
+// sin red, y el módulo real queda al lado solo para que esa versión tome de él sus tipos.
+await cp(join(stage, "src/lib/connect/profile-sync.ts"), join(stage, "src/lib/connect/profile-sync-server.ts"));
+await cp(join(web, "demo/profile-sync.ts"), join(stage, "src/lib/connect/profile-sync.ts"));
+
 await put("src/demo-catalog.json", JSON.stringify({ releases: windowReleases }));
 await mkdir(join(stage, "public/demo/releases"), { recursive: true });
 for (const release of windowReleases) {
@@ -174,9 +179,16 @@ for (const [from, to] of [
   ["title-page.tsx", "app/(public)/titulo/[id]/page.tsx"],
   ["person-page.tsx", "app/(public)/persona/[id]/page.tsx"],
   ["saga-page.tsx", "app/(public)/saga/[id]/page.tsx"],
+  ["title-detail-client.tsx", "src/components/demo/TitleDetailClient.tsx"],
+  ["pick-fields.ts", "src/components/demo/pick-fields.ts"],
 ]) {
   await cp(join(web, "demo", from), join(stage, to));
 }
+
+// Los resúmenes del catálogo, como archivo estático aparte (/demo/summaries.json). La ficha de un
+// título los pide cuando el navegador queda libre, en vez de llevarlos dentro de su JavaScript.
+await mkdir(join(stage, "app/demo/summaries.json"), { recursive: true });
+await cp(join(web, "demo/summaries-route.ts"), join(stage, "app/demo/summaries.json/route.ts"));
 
 async function walk(dir) {
   for (const entry of await readdir(dir, { withFileTypes: true })) {

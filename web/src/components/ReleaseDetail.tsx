@@ -22,14 +22,14 @@
 // .vcomp/.where-grid/.saga/.people/.person/.sect). El look se porta con los tokens del proyecto y las
 // clases de efecto (marco de rareza, sheen) viven en globals.css (anuladas bajo prefers-reduced-motion).
 
-import { useCallback, useState, type CSSProperties, type ReactNode } from "react";
+import { useCallback, useEffect, useState, type CSSProperties, type ReactNode } from "react";
+import dynamic from "next/dynamic";
 import Link from "next/link";
 
 import { AddToCalendarButton } from "@/components/AddToCalendarButton";
 import { YouTubeEmbed } from "@/components/YouTubeEmbed";
 import { ProfileActions } from "@/components/profile/ProfileActions";
 import { RatingReview } from "@/components/profile/RatingReview";
-import { ReleaseModal } from "@/components/ReleaseModal";
 import { SagaCarousel } from "@/components/SagaCarousel";
 import { ScheduleCalendar } from "@/components/ScheduleCalendar";
 import { useDialogEscape } from "@/lib/dialog-stack";
@@ -40,6 +40,7 @@ import { isSeasonCollection, sagaSlug } from "@/lib/saga";
 import { deriveRarity, type Tier } from "@/lib/rarity";
 import {
   CATEGORY_META,
+  COVER_SIZES,
   categoryKeyFromEnum,
   coverStyleFor,
   cssUrl,
@@ -52,12 +53,20 @@ import {
 import { jobLabel } from "@/lib/credit-labels";
 import { ui } from "@/lib/i18n";
 import {
-  TitleType,
   type Credit,
   type Image as CatalogImage,
   type Release,
   type ReleaseSummary,
 } from "@/gen/mdm7mo/catalog/v1/catalog_pb";
+import { TitleType } from "@/lib/catalog-enums";
+
+// El MODAL de otra ficha se carga aparte, la primera vez que hace falta. Trae consigo el lector de
+// fichas (y con él el motor de protobuf), que ninguna página necesita para pintarse: solo para abrir
+// otro título encima. loadReleaseModal se adelanta cuando el navegador queda libre (ver abajo), así que
+// al pulsar ya suele estar aquí.
+const loadReleaseModal = () =>
+  import("@/components/ReleaseModal").then((module) => module.ReleaseModal);
+const ReleaseModal = dynamic(loadReleaseModal, { ssr: false });
 
 // LANGUAGE_ALIASES mapea el CÓDIGO de idioma del perfil (es/en/…) a los NOMBRES con que puede aparecer en
 // el catálogo (inglés y español, en minúsculas), para poder resaltar el idioma preferido del usuario.
@@ -490,6 +499,24 @@ export function ReleaseDetail({
   // un enlace ya compartido la sigue encontrando: no se ha roto ninguna dirección.
   const offersSagaPage = hasSaga && !isSeasonCollection(release);
 
+  // Si desde esta ficha se puede abrir otra (conexiones o saga), el código del modal se pide en cuanto
+  // el navegador queda libre: así no pesa al cargar la página y ya está a mano al pulsar.
+  const canOpenModal = onOpenRelease === undefined && (related.length > 0 || hasSaga);
+  useEffect(() => {
+    if (!canOpenModal) {
+      return;
+    }
+    const preload = () => {
+      void loadReleaseModal().catch(() => {});
+    };
+    if (typeof window.requestIdleCallback !== "function") {
+      const timer = window.setTimeout(preload, 1);
+      return () => window.clearTimeout(timer);
+    }
+    const handle = window.requestIdleCallback(preload, { timeout: 3000 });
+    return () => window.cancelIdleCallback(handle);
+  }, [canOpenModal]);
+
   return (
     // Contenedor del detalle: ancho cómodo de lectura y espaciado generoso. El padre (página o modal)
     // decide el marco exterior (scroll, fondo); aquí solo va el CONTENIDO de la ficha.
@@ -802,7 +829,12 @@ export function ReleaseDetail({
                   <div
                     className="relative aspect-[16/10] overflow-hidden rounded-lg border"
                     style={{
-                      ...coverStyleFor(conn.release.backdropUrl, seedFromId(conn.release.id)),
+                      ...coverStyleFor(
+                        conn.release.backdropUrl,
+                        seedFromId(conn.release.id),
+                        1,
+                        COVER_SIZES.connection,
+                      ),
                       borderColor: "var(--color-border)",
                     }}
                   >

@@ -51,7 +51,7 @@ export default async function GrafoPage() {
   return (
     <main className="pg-page font-ui">
       {/* Enlace de vuelta, primero en el orden de tabulación. */}
-      <Link href="/" className="pg-back font-mono">
+      <Link href="/" prefetch={false} data-intent-prefetch="/" className="pg-back font-mono">
         <span aria-hidden="true">‹</span> {ui.graph.back}
       </Link>
 

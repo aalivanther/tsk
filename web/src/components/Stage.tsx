@@ -67,7 +67,8 @@ import {
   type TodayMarker,
 } from "@/lib/timeline";
 import { ui } from "@/lib/i18n";
-import { TitleType, type Release, type ReleaseSummary } from "@/gen/mdm7mo/catalog/v1/catalog_pb";
+import { type Release, type ReleaseSummary } from "@/gen/mdm7mo/catalog/v1/catalog_pb";
+import { TitleType } from "@/lib/catalog-enums";
 
 // TIER_FRAME_CLASS asigna a cada rareza su clase CSS de marco (borde/halo tipo videojuego del cascarón).
 const TIER_FRAME_CLASS: Record<Tier, string> = {

@@ -14,7 +14,9 @@
 
 import { type CSSProperties } from "react";
 
-import { Category, TitleType, type ReleaseSummary } from "@/gen/mdm7mo/catalog/v1/catalog_pb";
+import { type ReleaseSummary } from "@/gen/mdm7mo/catalog/v1/catalog_pb";
+import { Category, TitleType } from "@/lib/catalog-enums";
+import { isTmdbImage, tmdbImageAt, type TmdbDensityCandidate } from "@/lib/images";
 import { personIdentityKeySet, sharesAnyPerson } from "@/lib/person-identity";
 import { ui } from "@/lib/i18n";
 
@@ -1269,12 +1271,17 @@ export function cssUrl(url: string): string {
 // muestran una cubierta. Si el estreno trae una URL de imagen (de TMDB con token, o las de DEMO del
 // seed), la usamos como fondo "cover" y SE VEN las portadas; si la URL viene vacía (Fase 0 sin datos
 // reales), caemos al degradado determinista del cascarón. Así nunca queda un hueco: o imagen, o color.
-export function coverStyleFor(url: string, seed: number, opacity = 1): CSSProperties {
+export function coverStyleFor(
+  url: string,
+  seed: number,
+  opacity = 1,
+  sizes?: readonly TmdbDensityCandidate[],
+): CSSProperties {
   if (!url) {
     return gradientStyleFor(seed, opacity);
   }
   return {
-    backgroundImage: cssUrl(url),
+    backgroundImage: sizes === undefined ? cssUrl(url) : cssImageSet(url, sizes),
     backgroundSize: "cover",
     backgroundPosition: "center",
     backgroundRepeat: "no-repeat",
@@ -1283,3 +1290,74 @@ export function coverStyleFor(url: string, seed: number, opacity = 1): CSSProper
     opacity,
   };
 }
+
+// cssImageSet construye el fondo de una imagen de TMDB con una variante por densidad de pantalla.
+//
+// En español: muchas portadas se pintan pequeñas (una tarjeta de 132 píxeles, un chip de 250) pero se
+// pedían en el tamaño que guarda el catálogo (pósters de 500, fondos de 1280): el teléfono bajaba
+// varias veces los píxeles que iba a enseñar. Con image-set el navegador elige la variante de su
+// densidad, y cada variante de la lista (ver COVER_SIZES) tiene holgura de sobra sobre lo que se
+// pinta en una pantalla de esa densidad: nunca se ve una imagen más blanda que antes.
+//
+// Se escribe con el prefijo -webkit- a propósito: es la forma que entienden TODOS los navegadores
+// actuales (Safari anterior a la 17 no entiende la versión sin prefijo y se quedaría sin imagen).
+// Si la URL no es de TMDB no hay variantes que pedir y se usa tal cual.
+export function cssImageSet(url: string, sizes: readonly TmdbDensityCandidate[]): string {
+  if (cssUrl(url) === "none") {
+    return "none";
+  }
+  if (!isTmdbImage(url) || sizes.length === 0) {
+    return cssUrl(url);
+  }
+  const candidates = sizes.map(
+    ([width, density]) => `${cssUrl(tmdbImageAt(url, width))} ${density}x`,
+  );
+  return `-webkit-image-set(${candidates.join(", ")})`;
+}
+
+// COVER_SIZES son las variantes de cada portada pequeña, calculadas con su tamaño REAL en pantalla.
+//
+// Cómo se leen: con background-size: cover la imagen se escala hasta cubrir la caja, así que su ancho
+// pintado es max(ancho, alto × proporción) — 16:9 en los fondos, 2:3 en los pósters. Ese ancho, por la
+// densidad de la pantalla (1×, 2×, 3×), da los píxeles que se pintan. Cada variante tiene como mínimo
+// 2,5 veces esos píxeles, y nunca más que la imagen que guarda el catálogo (póster w500, fondo w1280).
+// Por qué tanta holgura: las variantes pequeñas de TMDB ya vienen algo blandas de origen, y una que
+// apenas alcanza el tamaño final se nota (se comprobó a simple vista: un póster de 154 pintado a 132,
+// o uno de 92 pintado a 46, perdían detalle y contraste). Con 2,5 veces o más, la imagen reducida no
+// se distingue de la que se reducía desde el original. El navegador toma la menor densidad que alcance
+// la de su pantalla (o la mayor si ninguna llega), así que una variante "2x" también cubre las de 1×.
+// Medido de 320 a 2560 píxeles de ventana (las cajas tienen tamaño fijo en CSS).
+export const COVER_SIZES = {
+  // Conexión de la ficha: caja de 132×82,5 → fondo pintado a 147 de ancho (368 / 735 / 1102).
+  connection: [
+    ["w780", 2],
+    ["w1280", 3],
+  ],
+  // Póster de la tira de la saga: 132 de ancho (330 / 660 / 990).
+  sagaPoster: [
+    ["w342", 1],
+    ["w500", 2],
+  ],
+  // Póster de un crédito en la página de una persona: 46 de ancho (115 / 230 / 345).
+  creditPoster: [
+    ["w154", 1],
+    ["w342", 2],
+    ["w500", 3],
+  ],
+  // El mismo hueco cuando el título no tiene póster y se usa su fondo: 46×69 → 123 de ancho
+  // (308 / 615 / 922).
+  creditBackdrop: [
+    ["w780", 2],
+    ["w1280", 3],
+  ],
+  // Póster de una entrada en la página de una saga: hasta 72 de ancho (180 / 360 / 540).
+  sagaEntryPoster: [
+    ["w185", 1],
+    ["w500", 2],
+  ],
+  // Banner del chip de categoría en la espina: hasta 257 de ancho (643 / 1285).
+  chipBanner: [
+    ["w780", 1],
+    ["w1280", 2],
+  ],
+} as const satisfies Record<string, readonly TmdbDensityCandidate[]>;

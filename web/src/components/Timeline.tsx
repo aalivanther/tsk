@@ -43,6 +43,7 @@ import {
   Fragment,
   memo,
   useCallback,
+  startTransition,
   useEffect,
   useMemo,
   useRef,
@@ -54,13 +55,15 @@ import {
 } from "react";
 
 import { useDragScroll } from "@/lib/use-drag-scroll";
+import { useCopyPulses } from "@/lib/use-copy-pulses";
 import { useFilter } from "@/lib/timeline-context";
 import {
   CATEGORY_META,
+  COVER_SIZES,
   LANE_META,
   MONTHS,
   buildCalendarMonths,
-  cssUrl,
+  cssImageSet,
   effectLevel,
   isDayInRange,
   matchesFilter,
@@ -214,6 +217,35 @@ export function Timeline({ releases, lane, today, onOpenPackage }: TimelineProps
     initialExpandedKey(releases, filter, today),
   );
 
+  // LAS COPIAS CLON SE MONTAN EN EL NAVEGADOR, NO EN EL SERVIDOR.
+  //
+  // En español: el bucle infinito necesita tres copias de la línea (clon · principal · clon), pero
+  // las tres son idénticas. Escribirlas las tres en el HTML triplicaba la parte más pesada de la
+  // portada (más de 11.000 elementos y 800 imágenes que el teléfono tenía que leer, maquetar e
+  // hidratar antes de responder). Ahora el servidor escribe UNA copia y las otras dos se añaden en el
+  // navegador después de hidratar.
+  //
+  // La copia que llega del servidor es la PRIMERA de las tres (la que siempre se veía al cargar,
+  // con el desplazamiento en cero), y al montarse las otras dos pasa a ser el clon de la izquierda:
+  // conserva sus mismos nodos (mismas claves), así que lo pintado no cambia ni un píxel y el
+  // desplazamiento sigue en cero, igual que cuando las tres venían del servidor. Mientras está sola
+  // hace de principal (enfocable y visible para los lectores de pantalla).
+  //
+  // Si la espina no se ve (en el teléfono, mientras se decide si toca la agenda), los clones no se
+  // montan: esa espina va a desaparecer de todos modos.
+  //
+  // Se montan como transición (startTransition): React las construye a trozos, cediendo el hilo entre
+  // uno y otro, en vez de en una sola tarea larga de cientos de milisegundos justo al hidratar. No se
+  // ve ningún cambio mientras tanto: los clones nuevos quedan a la derecha, fuera de la vista.
+  const [clonesMounted, setClonesMounted] = useState(false);
+  useEffect(() => {
+    const container = scrollContainerRef.current;
+    if (clonesMounted || container === null || container.getClientRects().length === 0) {
+      return;
+    }
+    startTransition(() => setClonesMounted(true));
+  }, [clonesMounted]);
+
   // ARRASTRE de la espina: "agarrar y tirar" con inercia y bucle infinito. Toda la mecánica vive en
   // un hook compartido (useDragScroll), porque el carrusel de sagas del detalle usa exactamente el
   // mismo gesto: tenerlo escrito dos veces hacía que cualquier ajuste hubiera que repetirlo y que las
@@ -223,9 +255,14 @@ export function Timeline({ releases, lane, today, onOpenPackage }: TimelineProps
     wrapScroll,
     shouldSuppressClick,
   } = useDragScroll(scrollContainerRef, {
-    // El contenido está repetido en tres copias idénticas para el bucle infinito.
-    copies: 3,
+    // El contenido está repetido en tres copias idénticas para el bucle infinito (una sola mientras
+    // los clones no están montados: sin ellos no hay bucle que mantener).
+    copies: clonesMounted ? 3 : 1,
   });
+
+  // Los pulsos de HOY (aguja y caja del día) laten igual en las tres copias y solo se animan las que
+  // están cerca de la vista (ver use-copy-pulses).
+  useCopyPulses(scrollContainerRef, clonesMounted);
 
   // handleToggleDay abre/cierra la estación pulsada (acordeón). Si el "clic" viene del final de un
   // arrastre, se ignora: si no, cada vez que se recorre la espina se abriría un día por accidente.
@@ -365,15 +402,33 @@ export function Timeline({ releases, lane, today, onOpenPackage }: TimelineProps
   //
   // Si por lo que fuera la estación del ancla no existiera en este carril (por ejemplo, el carril de
   // cine cuando ese día solo hay series), se cae a la aguja de HOY, que siempre está montada.
+  //
+  // Corre cuando ya están los clones (como cuando el servidor los escribía): el destino es la estación
+  // de la copia principal, que hasta entonces no existe.
   const openingAnchorRef = useRef(dateAnchor);
+  const openedRef = useRef(false);
   useEffect(() => {
-    const anchor = openingAnchorRef.current;
-    const station = dayRefs.current.get(`${anchor.month}-${anchor.day}`);
-    const target = station ?? todayMarkerRef.current;
-    if (target !== null && target !== undefined) {
-      target.scrollIntoView({ behavior: "auto", inline: "center", block: "nearest" });
+    if (!clonesMounted || openedRef.current) {
+      return;
     }
-  }, []);
+    openedRef.current = true;
+    // Se espera a que el navegador pinte UNA vez la línea completa en la posición de partida. Las
+    // estaciones vacías usan content-visibility (globals.css): su ancho real solo se conoce y se
+    // recuerda después de pintarse, y el centrado depende de esos anchos. Cuando las tres copias
+    // venían del servidor, el navegador siempre había pintado ya ese tramo al llegar aquí; con este
+    // fotograma de espera se centra exactamente igual, sea el equipo rápido o lento.
+    let frame = window.requestAnimationFrame(() => {
+      frame = window.requestAnimationFrame(() => {
+        const anchor = openingAnchorRef.current;
+        const station = dayRefs.current.get(`${anchor.month}-${anchor.day}`);
+        const target = station ?? todayMarkerRef.current;
+        if (target !== null && target !== undefined) {
+          target.scrollIntoView({ behavior: "auto", inline: "center", block: "nearest" });
+        }
+      });
+    });
+    return () => window.cancelAnimationFrame(frame);
+  }, [clonesMounted]);
 
   // handleKeyDown permite desplazar la espina horizontalmente con las flechas del teclado.
   // En español: cuando la cinta tiene el foco, Izquierda/Derecha la mueven un paso. Inicio/Fin van a
@@ -535,13 +590,21 @@ export function Timeline({ releases, lane, today, onOpenPackage }: TimelineProps
             togglea por su stationKey (mes-día), que es idéntico en las tres, así el día se abre se vea la
             copia que se vea. El foco por teclado en los clones se neutraliza en un efecto (data-clone).
           */}
-          <div className="tlx-copy" data-clone aria-hidden="true">
-            {renderCopy("a", false)}
+          <div
+            className="tlx-copy"
+            data-clone={clonesMounted ? true : undefined}
+            aria-hidden={clonesMounted ? "true" : undefined}
+          >
+            {renderCopy("a", !clonesMounted)}
           </div>
-          <div className="tlx-copy">{renderCopy("b", true)}</div>
-          <div className="tlx-copy" data-clone aria-hidden="true">
-            {renderCopy("c", false)}
-          </div>
+          {clonesMounted ? (
+            <>
+              <div className="tlx-copy">{renderCopy("b", true)}</div>
+              <div className="tlx-copy" data-clone aria-hidden="true">
+                {renderCopy("c", false)}
+              </div>
+            </>
+          ) : null}
         </div>
       </div>
 
@@ -1345,7 +1408,9 @@ function CategoryBox({
         <span
           aria-hidden="true"
           className="tlx-chip-banner"
-          style={{ backgroundImage: cssUrl(categoryPackage.bannerUrl) }}
+          style={{
+            backgroundImage: cssImageSet(categoryPackage.bannerUrl, COVER_SIZES.chipBanner),
+          }}
         />
       ) : null}
       {/* Marca de GUSTO: un corazón oro en la esquina del chip cuando contiene algo que le encaja al

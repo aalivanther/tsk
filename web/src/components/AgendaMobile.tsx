@@ -350,6 +350,9 @@ function AgendaPackage({
   // Título destacado: el mejor calificado del paquete, para que la fila diga QUÉ se estrena y no
   // solo "3 estrenos de cine". Es la diferencia entre una agenda útil y un contador.
   const headline = categoryPackage.items[0]?.title ?? "";
+  // Solo direcciones http(s), igual que cssUrl: cualquier otra cosa se queda sin banner.
+  const bannerUrl = tmdbImage(categoryPackage.bannerUrl, "thumb");
+  const bannerSrc = cssUrl(bannerUrl) === "none" ? "" : bannerUrl;
 
   return (
     <button
@@ -365,13 +368,22 @@ function AgendaPackage({
       )}
     >
       {/* Mini-banner del título más importante del paquete (decorativo: el texto ya lo nombra). */}
-      {categoryPackage.bannerUrl !== "" ? (
-        <span
+      {/* Es una <img> perezosa y no un fondo CSS: un fondo se descarga en cuanto la fila existe, y la
+          agenda tiene unas 140 filas, así que el teléfono bajaba casi 2 MB de banners que no estaba
+          viendo antes de poder pintar los que sí. La imagen se recorta igual que el fondo
+          (object-fit: cover, centrada; ver .ag-pkg-banner) y lleva el mismo velo y opacidad. */}
+      {bannerSrc !== "" ? (
+        // eslint-disable-next-line @next/next/no-img-element -- imagen ya dimensionada en origen (TMDB)
+        <img
           aria-hidden="true"
+          alt=""
           className="ag-pkg-banner"
           // El banner de una fila mide ~310px de ancho: se pide la variante pequeña de la imagen en
           // lugar de la de 1280px que guarda el catálogo (más de cuatro veces el peso necesario).
-          style={{ backgroundImage: cssUrl(tmdbImage(categoryPackage.bannerUrl, "thumb")) }}
+          src={bannerSrc}
+          loading="lazy"
+          decoding="async"
+          draggable={false}
         />
       ) : null}
 

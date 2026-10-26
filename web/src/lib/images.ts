@@ -71,3 +71,25 @@ export function tmdbImage(url: string, size: TmdbImageSize): string {
 export function isTmdbImage(url: string): boolean {
   return TMDB_PATH_PATTERN.test(url);
 }
+
+// TmdbWidth son los anchos exactos que TMDB sirve (pósters: w92…w780; fondos: w300, w780, w1280).
+// En español: los tamaños por propósito de arriba bastan para elegir UNA variante; para dar al
+// navegador varias según la densidad de la pantalla hace falta nombrar el ancho exacto.
+export type TmdbWidth = "w92" | "w154" | "w185" | "w300" | "w342" | "w500" | "w780" | "w1280";
+
+// TmdbDensityCandidate es una variante para una densidad: "en pantallas de hasta N× usa este ancho".
+export type TmdbDensityCandidate = readonly [width: TmdbWidth, density: 1 | 2 | 3];
+
+// tmdbImageAt devuelve la misma imagen en un ancho exacto de TMDB (misma regla de seguridad que
+// tmdbImage: si la URL no es de TMDB, se devuelve tal cual).
+export function tmdbImageAt(url: string, width: TmdbWidth): string {
+  if (!url) {
+    return url;
+  }
+  const match = TMDB_PATH_PATTERN.exec(url);
+  if (match === null) {
+    return url;
+  }
+  const [, prefix, , path] = match;
+  return `${prefix}${width}${path}`;
+}

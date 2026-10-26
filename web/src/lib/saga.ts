@@ -30,7 +30,8 @@
 // diferentes y mientras sigan mezcladas la página lo DICE, en vez de llamar "saga" a la lista de
 // temporadas de una sola serie.
 
-import { TitleType, type CollectionItem, type Release } from "@/gen/mdm7mo/catalog/v1/catalog_pb";
+import { type CollectionItem, type Release } from "@/gen/mdm7mo/catalog/v1/catalog_pb";
+import { TitleType } from "@/lib/catalog-enums";
 
 // SagaEntry es UNA entrada de la saga y, si existe, el estreno del catálogo que le corresponde.
 export type SagaEntry = {

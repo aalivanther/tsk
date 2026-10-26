@@ -190,7 +190,13 @@ export function Topbar({ genres, catalog, today }: TopbarProps) {
         Marca: logo clicable a la home (navegable por teclado). "MDM" normal + "7mo" en oro. La frase de
         Máximo va al lado y se oculta en pantallas estrechas para mantener la barra delgada.
       */}
-      <Link href="/" className="tlx-brand" aria-label={`${ui.brand.full} — ${ui.brand.tagline}`}>
+      <Link
+        href="/"
+        prefetch={false}
+        data-intent-prefetch="/"
+        className="tlx-brand"
+        aria-label={`${ui.brand.full} — ${ui.brand.tagline}`}
+      >
         <span className="tlx-brand-name">
           {ui.brand.prefix}
           <span className="text-gold"> {ui.brand.highlight}</span>
@@ -260,6 +266,8 @@ export function Topbar({ genres, catalog, today }: TopbarProps) {
       */}
       <Link
         href="/perfil"
+        prefetch={false}
+        data-intent-prefetch="/perfil"
         className={`tlx-profile${initial !== "" ? " is-auth" : ""}`}
         aria-label={ui.actions.profile}
       >

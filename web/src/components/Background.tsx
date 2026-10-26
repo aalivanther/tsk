@@ -147,6 +147,15 @@ export default function Background(): JSX.Element {
           );
         }
 
+        /* Tapado por completo: en el tema oscuro el fondo rotativo de la portada es opaco y cubre
+           la ventana entera, así que estas manchas no se ven. Mientras dure (lo marca
+           GlobalBackground en <html>, y lo quita antes de cada desvanecido entre fondos, el único
+           momento en que se traslucen) se pausan: cada fotograma de su deriva obliga a recalcular un
+           desenfoque enorme para nada. Al reanudar siguen desde donde estaban. */
+        html[data-theme="dark"][data-bg-covered] .organic-background .blob {
+          animation-play-state: paused;
+        }
+
         /* Accesibilidad: si la persona pidió menos movimiento, congelamos los
            blobs (sin animación). El fondo conserva su color y composición. */
         @media (prefers-reduced-motion: reduce) {
