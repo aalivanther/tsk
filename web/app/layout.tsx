@@ -26,6 +26,23 @@ import { Providers } from "@/components/Providers";
 import { IntentPrefetch } from "@/components/IntentPrefetch";
 import { setupPending } from "@/lib/local-setup";
 
+// ARCHIVOS DE FUENTE (public/fonts): son el subconjunto LATINO de Google Fonts (a–z, acentos, ñ, ¿¡ y la
+// puntuación tipográfica), con la licencia de cada familia al lado (*-LICENSE.txt, SIL OFL 1.1). Antes
+// había cuatro archivos de otro subconjunto (vietnamita / latino extendido) que NO traían las letras
+// a–z: casi todo el texto se pintaba con la fuente de respaldo (Arial). Origen exacto de cada archivo,
+// pedido a fonts.googleapis.com/css2 y descargado del bloque "latin":
+//   fraunces.woff2       Fraunces v38 (fuente 1.000), ejes opsz 9–144, wght 100–900, SOFT 0–100, WONK 0–1
+//                        https://fonts.gstatic.com/s/fraunces/v38/6NUV8FyLNQOQZAnv9ZwIlOkuy91B.woff2
+//   inter.woff2          Inter v20 (fuente 4.001), eje wght 100–900
+//                        https://fonts.gstatic.com/s/inter/v20/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa1ZL7W0Q5nw.woff2
+//   jetbrains-mono.woff2 JetBrains Mono v24 (fuente 2.211), eje wght 100–800
+//                        https://fonts.gstatic.com/s/jetbrainsmono/v24/tDbV2o-flEEny0FZhsfKu5WU4xD7OwGtT0rU.woff2
+//   space-grotesk.woff2  Space Grotesk v22 (fuente 2.000), eje wght 300–700
+//                        https://fonts.gstatic.com/s/spacegrotesk/v22/V8mDoQDjQSkFtoMM3T6r8E7mPbF4C_k3HqU.woff2
+//   orbitron.woff2       sin cambios (ya era el subconjunto latino).
+// Letras de otros alfabetos o del latino extendido (ł, ş, ō… en algunos nombres) caen a la fuente de
+// respaldo de cada pila.
+//
 // Fraunces: fuente DISPLAY del producto (serif de cartel de cine clásico) para los TÍTULOS de estrenos,
 // hero y modales. Es una fuente VARIABLE: un solo archivo cubre todos los pesos y, además, trae el eje
 // ÓPTICO (opsz), que ajusta el contraste del trazo al tamaño — dramática en un hero de 48px y legible en
@@ -37,19 +54,21 @@ const fraunces = localFont({ src: "../public/fonts/fraunces.woff2", variable: "-
 // Space Grotesk: fuente HUD del producto (geométrica contemporánea) para kickers, etiquetas y datos de
 // interfaz. Variable (un archivo). Da el aire "tech" que antes ponía Orbitron, pero sin su disfraz
 // sci-fi, que en textos funcionales competía con la voz del display y costaba de leer.
-const spaceGrotesk = localFont({ src: "../public/fonts/space-grotesk.woff2", variable: "--font-space-grotesk", display: "swap" });
+// No se adelanta (preload: false): se pide cuando el CSS la necesita, para no competir al cargar con
+// lo que se pinta primero (títulos y cuerpo). Lo mismo con Orbitron y JetBrains Mono.
+const spaceGrotesk = localFont({ src: "../public/fonts/space-grotesk.woff2", variable: "--font-space-grotesk", display: "swap", preload: false });
 
 // Orbitron: se conserva EXCLUSIVAMENTE como logotipo de la marca (un solo peso, un solo archivo). Es una
 // excepción deliberada: la marca ya tiene esa forma reconocible, pero fuera del logotipo la interfaz
 // habla con Space Grotesk.
-const orbitron = localFont({ src: "../public/fonts/orbitron.woff2", variable: "--font-orbitron", display: "swap" });
+const orbitron = localFont({ src: "../public/fonts/orbitron.woff2", variable: "--font-orbitron", display: "swap", preload: false });
 
 // Inter: fuente de INTERFAZ/cuerpo (sans neutra, altísima legibilidad en oscuro) para textos normales.
 // Sin lista de pesos: Next carga su versión VARIABLE (un archivo cubre todo el rango).
 const inter = localFont({ src: "../public/fonts/inter.woff2", variable: "--font-inter", display: "swap" });
 
 // JetBrains Mono: fuente MONOESPACIADA (tech) para chips, datos, timestamps y ratings. También variable.
-const jetbrainsMono = localFont({ src: "../public/fonts/jetbrains-mono.woff2", variable: "--font-jetbrains", display: "swap" });
+const jetbrainsMono = localFont({ src: "../public/fonts/jetbrains-mono.woff2", variable: "--font-jetbrains", display: "swap", preload: false });
 
 // metadata define lo que aparece en la pestaña del navegador y en buscadores.
 // En español: el título y la descripción "oficiales" del producto, en es-MX.
