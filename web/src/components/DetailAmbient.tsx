@@ -9,7 +9,7 @@
 
 import { type CSSProperties } from "react";
 
-import { cssUrl } from "@/lib/timeline";
+import { BackdropImage } from "@/components/BackdropImage";
 import { preloadTintableImage, usePosterTint } from "@/lib/use-poster-tint";
 
 type DetailAmbientProps = {
@@ -19,12 +19,16 @@ type DetailAmbientProps = {
 export function DetailAmbient({ backdropUrl }: DetailAmbientProps) {
   const tint = usePosterTint(backdropUrl);
   // RESERVA DE LA IMAGEN CON PERMISO: la misma descarga sirve para pintar el ambiente y para sacarle el
-  // color. Sin esto el navegador se traía el backdrop dos veces. Ver preloadTintableImage.
+  // color. Ver preloadTintableImage y BackdropImage (la imagen va como <img crossOrigin>, no como fondo
+  // CSS, que se pedía otra vez sin permiso).
   preloadTintableImage(backdropUrl);
-  // cssUrl escapa/valida la URL (anti-inyección CSS); ver su doc en lib/timeline.
-  const style: CSSProperties = { backgroundImage: cssUrl(backdropUrl) };
+  const style: CSSProperties = {};
   if (tint !== null) {
     (style as Record<string, string>)["--poster-tint"] = tint;
   }
-  return <div className="td-ambient" aria-hidden="true" style={style} />;
+  return (
+    <div className="td-ambient" aria-hidden="true" style={style}>
+      <BackdropImage url={backdropUrl} priority="high" className="bg-cover-img td-ambient-img" />
+    </div>
+  );
 }

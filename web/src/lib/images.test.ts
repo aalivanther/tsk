@@ -5,7 +5,7 @@
 
 import { describe, expect, it } from "vitest";
 
-import { isTmdbImage, tmdbImage } from "@/lib/images";
+import { isTmdbImage, tmdbImage, tmdbImageAt } from "@/lib/images";
 
 describe("tmdbImage", () => {
   it("cambia el tamaño conservando el resto de la URL", () => {
@@ -61,5 +61,13 @@ describe("tmdbImage", () => {
     expect(tmdbImage("https://image.tmdb.org/t/p/w500/abc.jpg", "tiny")).toBe(
       "https://image.tmdb.org/t/p/w92/abc.jpg",
     );
+  });
+
+  it("tmdbImageAt cambia solo el ancho, y deja intactas las URLs que no son de TMDB", () => {
+    expect(tmdbImageAt("https://image.tmdb.org/t/p/w1280/abc.jpg", "w300")).toBe(
+      "https://image.tmdb.org/t/p/w300/abc.jpg",
+    );
+    expect(tmdbImageAt("https://example.com/abc.jpg", "w300")).toBe("https://example.com/abc.jpg");
+    expect(tmdbImageAt("", "w300")).toBe("");
   });
 });

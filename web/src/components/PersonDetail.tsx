@@ -21,7 +21,7 @@ import { type CSSProperties } from "react";
 import { YouTubeEmbed } from "@/components/YouTubeEmbed";
 import { selectTrailer } from "@/lib/trailer-selection";
 import { useProfile } from "@/lib/profile-context";
-import { coverStyleFor, cssUrl, gradientStyleFor, seedFromId } from "@/lib/timeline";
+import { COVER_SIZES, coverStyleFor, cssUrl, gradientStyleFor, seedFromId } from "@/lib/timeline";
 import {
   tmdbPersonUrl,
   type Collaborator,
@@ -231,6 +231,8 @@ function CreditCard({ credit }: { credit: PersonCredit }) {
         style={coverStyleFor(
           credit.release.posterUrl || credit.release.backdropUrl,
           seedFromId(credit.release.id),
+          1,
+          credit.release.posterUrl ? COVER_SIZES.creditPoster : COVER_SIZES.creditBackdrop,
         )}
       />
       <span className="pd-credit-text">

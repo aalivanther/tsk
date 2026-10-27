@@ -16,6 +16,8 @@ export function BackToHomeLink() {
   return (
     <Link
       href="/"
+      prefetch={false}
+      data-intent-prefetch="/"
       className="font-mono inline-flex w-fit items-center gap-2 text-xs tracking-[0.08em] text-gold no-underline transition-colors hover:text-gold-bright"
     >
       {/* La flecha "‹" es decorativa; el texto es el que comunica la acción de volver. */}

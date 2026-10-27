@@ -36,7 +36,8 @@ import { useRouter } from "next/navigation";
 import { useDialogEscape } from "@/lib/dialog-stack";
 import { useFocusTrap } from "@/lib/use-focus-trap";
 import { ui } from "@/lib/i18n";
-import { TitleType, type ReleaseSummary } from "@/gen/mdm7mo/catalog/v1/catalog_pb";
+import { type ReleaseSummary } from "@/gen/mdm7mo/catalog/v1/catalog_pb";
+import { TitleType } from "@/lib/catalog-enums";
 
 // MAX_RESULTS es cuántos resultados se muestran como mucho.
 // En español: una lista de veinte títulos en un panel pequeño no ayuda a nadie; con los ocho mejores

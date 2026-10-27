@@ -19,7 +19,7 @@ import Link from "next/link";
 import { YouTubeEmbed } from "@/components/YouTubeEmbed";
 import { selectTrailer } from "@/lib/trailer-selection";
 import { useProfile } from "@/lib/profile-context";
-import { coverStyleFor, seedFromId } from "@/lib/timeline";
+import { COVER_SIZES, coverStyleFor, seedFromId } from "@/lib/timeline";
 import { type SagaEntry, type SagaProfile } from "@/lib/saga";
 import { ui } from "@/lib/i18n";
 import { type Release } from "@/gen/mdm7mo/catalog/v1/catalog_pb";
@@ -128,7 +128,11 @@ function SagaEntryCard({ entry, seed }: { entry: SagaEntry; seed: number }) {
   // El cuerpo de la tarjeta es el mismo lleve enlace o no.
   const body = (
     <>
-      <span aria-hidden="true" className="sg-entry-poster" style={coverStyleFor(posterUrl, seed)} />
+      <span
+        aria-hidden="true"
+        className="sg-entry-poster"
+        style={coverStyleFor(posterUrl, seed, 1, COVER_SIZES.sagaEntryPoster)}
+      />
       <span className="sg-entry-text">
         <span className="sg-entry-title font-display">{item.title}</span>
         <span className="sg-entry-meta font-mono">

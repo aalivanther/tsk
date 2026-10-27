@@ -100,7 +100,7 @@ const defaultTrustedProxyHops = 0
 // La fuente de verdad de la versión es el archivo VERSION en la raíz del monorepo;
 // el Dockerfile lo lee y lo pasa por aquí para no depender de rutas de archivos en
 // tiempo de ejecución.
-var buildVersion = "0.1.75"
+var buildVersion = "0.1.76"
 
 // Config agrupa todos los ajustes del backend leídos del entorno.
 // En español: es la "ficha de ajustes" del servidor. Se llena una vez al arrancar y

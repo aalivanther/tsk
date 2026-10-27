@@ -16,6 +16,7 @@
 // Solo se monta en móvil (lo decide quien la usa): en escritorio la navegación vive en el Topbar.
 
 import Link from "next/link";
+
 import { usePathname } from "next/navigation";
 import { useCallback, useMemo, useState } from "react";
 
@@ -96,6 +97,8 @@ export function BottomNav({ catalog, today }: BottomNavProps) {
       {/* Destino 1: la línea de tiempo (la casa del producto). */}
       <Link
         href="/"
+        prefetch={false}
+        data-intent-prefetch="/"
         className="bn-item"
         data-active={isTimeline ? "true" : undefined}
         aria-current={isTimeline ? "page" : undefined}
@@ -142,6 +145,8 @@ export function BottomNav({ catalog, today }: BottomNavProps) {
       {/* Destino 3: el perfil (biblioteca, reseñas, ajustes). */}
       <Link
         href="/perfil"
+        prefetch={false}
+        data-intent-prefetch="/perfil"
         className="bn-item"
         data-active={isProfile ? "true" : undefined}
         aria-current={isProfile ? "page" : undefined}

@@ -18,9 +18,9 @@
 // sacamos el paquete exacto (mes + día + categoría). Una sola fuente de verdad para el agrupado.
 
 import { useCallback, useMemo, useState } from "react";
+import dynamic from "next/dynamic";
 
 import { AgendaMobile } from "@/components/AgendaMobile";
-import { Stage } from "@/components/Stage";
 import { Timeline } from "@/components/Timeline";
 import { useIsMobile } from "@/lib/use-is-mobile";
 import { useFilter } from "@/lib/timeline-context";
@@ -43,6 +43,13 @@ import {
 } from "@/lib/timeline";
 import { ui } from "@/lib/i18n";
 import { type ReleaseSummary } from "@/gen/mdm7mo/catalog/v1/catalog_pb";
+
+// El overlay (Stage) se carga aparte: cerrado no pinta nada (ni en el servidor), y con él viaja el
+// lector de fichas y el motor de protobuf, que la línea de tiempo no necesita para pintarse. Se pide
+// en cuanto la página arranca, sin bloquearla, así que al pulsar un paquete ya está aquí.
+const Stage = dynamic(() => import("@/components/Stage").then((module) => module.Stage), {
+  ssr: false,
+});
 
 // OpenPackage describe el paquete ABIERTO en el overlay (nivel 1): su ubicación y sus estrenos.
 // En español: cuando hay un modal de categoría abierto, guardamos qué mes/día/categoría es y la lista
@@ -182,7 +189,14 @@ export function TimelineStage({ releases, today }: TimelineStageProps) {
   // Presentación según el tamaño de pantalla: agenda vertical en móvil, espina horizontal en
   // escritorio (ver el bloque de render). El hook resuelve en el navegador; durante el render del
   // servidor asume escritorio, que es el valor con el que la app venía funcionando.
-  const { isMobile } = useIsMobile();
+  //
+  // Hasta que el navegador mide la pantalla (resolved), se escriben LAS DOS presentaciones y el CSS
+  // enseña la que corresponde (tlx-view, globals.css, con el mismo punto de corte que el hook). Antes
+  // el servidor escribía solo la de escritorio y en el teléfono se veía la espina horizontal durante
+  // el primer segundo, hasta que la agenda la sustituía. En cuanto se resuelve queda montada solo una.
+  const { isMobile, resolved: screenResolved } = useIsMobile();
+  const showDesktop = !screenResolved || !isMobile;
+  const showMobile = !screenResolved || isMobile;
 
   const [openPackage, setOpenPackage] = useState<OpenPackage | null>(null);
   const [activeRelease, setActiveRelease] = useState<ReleaseSummary | null>(null);
@@ -301,20 +315,24 @@ export function TimelineStage({ releases, today }: TimelineStageProps) {
           En móvil NO se muestra: la agenda vertical ya se recorre con el propio desplazamiento y el
           navegador de periodo ocuparía una franja valiosa de una pantalla pequeña.
         */}
-        {!isMobile ? (
-          <DateRangeControl
-            active={dateRange}
-            onChange={handleSelectGranularity}
-            periodLabel={periodLabel}
-            canStepBack={canStepBack}
-            canStepForward={canStepForward}
-            onStep={handleStep}
-            onGoToday={handleGoToday}
-            atToday={atToday}
-          />
-        ) : null}
+        <div
+          className="tlx-view tlx-view-desktop"
+          data-pending={screenResolved ? undefined : "true"}
+        >
+          {showDesktop ? (
+            <DateRangeControl
+              active={dateRange}
+              onChange={handleSelectGranularity}
+              periodLabel={periodLabel}
+              canStepBack={canStepBack}
+              canStepForward={canStepForward}
+              onStep={handleStep}
+              onGoToday={handleGoToday}
+              atToday={atToday}
+            />
+          ) : null}
 
-        {/*
+          {/*
           DOS PRESENTACIONES DEL MISMO CATÁLOGO, no una encogida:
             - Escritorio: los dos carriles de ESPINA horizontal (la firma visual del producto).
             - Móvil: la AGENDA vertical, que es la espina girada 90° — se recorre con el pulgar, como
@@ -323,19 +341,26 @@ export function TimelineStage({ releases, today }: TimelineStageProps) {
           DOM. Ambas comparten el mismo gancho onOpenPackage, así que el flujo de 3 niveles y todo el
           estado del overlay son EXACTAMENTE los mismos en las dos.
         */}
-        {isMobile ? (
-          <AgendaMobile releases={releases} today={today} onOpenPackage={handleOpenPackage} />
-        ) : (
-          LANE_ORDER.map((lane) => (
-            <Timeline
-              key={lane}
-              lane={lane}
-              releases={releasesForLane(releases, lane)}
-              today={today}
-              onOpenPackage={handleOpenPackage}
-            />
-          ))
-        )}
+          {showDesktop
+            ? LANE_ORDER.map((lane) => (
+                <Timeline
+                  key={lane}
+                  lane={lane}
+                  releases={releasesForLane(releases, lane)}
+                  today={today}
+                  onOpenPackage={handleOpenPackage}
+                />
+              ))
+            : null}
+        </div>
+        <div
+          className="tlx-view tlx-view-mobile"
+          data-pending={screenResolved ? undefined : "true"}
+        >
+          {showMobile ? (
+            <AgendaMobile releases={releases} today={today} onOpenPackage={handleOpenPackage} />
+          ) : null}
+        </div>
       </div>
 
       {/*

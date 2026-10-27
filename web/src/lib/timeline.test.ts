@@ -8,6 +8,9 @@ import { describe, expect, it } from "vitest";
 import {
   buildCalendarMonths,
   catalogWindow,
+  COVER_SIZES,
+  coverStyleFor,
+  cssImageSet,
   cssUrl,
   findConnections,
   firstAnchorWithContent,
@@ -364,5 +367,48 @@ describe("findConnections (conexiones reales entre estrenos)", () => {
     expect(conexiones[0].release.id).toBe("por-reparto");
     expect(conexiones[0].reason).toBe("cast");
     expect(conexiones[1].reason).toBe("genre");
+  });
+});
+
+describe("cssImageSet (variantes por densidad de pantalla)", () => {
+  const poster = "https://image.tmdb.org/t/p/w500/abc.jpg";
+
+  it("da una variante por densidad, cada una con su ancho de TMDB", () => {
+    expect(cssImageSet(poster, COVER_SIZES.sagaPoster)).toBe(
+      '-webkit-image-set(url("https://image.tmdb.org/t/p/w342/abc.jpg") 1x, url("https://image.tmdb.org/t/p/w500/abc.jpg") 2x)',
+    );
+  });
+
+  it("deja tal cual las URLs que no son de TMDB y rechaza las inseguras", () => {
+    expect(cssImageSet("https://example.com/a.jpg", COVER_SIZES.sagaPoster)).toBe(
+      'url("https://example.com/a.jpg")',
+    );
+    expect(cssImageSet("javascript:alert(1)", COVER_SIZES.sagaPoster)).toBe("none");
+    expect(cssImageSet("", COVER_SIZES.sagaPoster)).toBe("none");
+  });
+
+  it("coverStyleFor sin variantes se comporta como siempre", () => {
+    expect(coverStyleFor(poster, 1).backgroundImage).toBe(cssUrl(poster));
+    expect(coverStyleFor(poster, 1, 1, COVER_SIZES.creditPoster).backgroundImage).toContain(
+      "-webkit-image-set(",
+    );
+  });
+
+  it("ninguna variante es más grande que la imagen que guarda el catálogo", () => {
+    const width = (segment: string) => Number(segment.slice(1));
+    for (const sizes of Object.values(COVER_SIZES)) {
+      for (const [segment] of sizes) {
+        expect(width(segment)).toBeLessThanOrEqual(1280);
+      }
+    }
+    for (const sizes of [
+      COVER_SIZES.sagaPoster,
+      COVER_SIZES.creditPoster,
+      COVER_SIZES.sagaEntryPoster,
+    ]) {
+      for (const [segment] of sizes) {
+        expect(width(segment)).toBeLessThanOrEqual(500);
+      }
+    }
   });
 });

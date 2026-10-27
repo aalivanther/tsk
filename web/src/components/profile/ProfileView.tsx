@@ -145,7 +145,7 @@ export function ProfileView({ catalog, genres, platforms }: ProfileViewProps) {
 
   return (
     <main className="pf-page font-ui">
-      <Link href="/" className="pf-back font-mono">
+      <Link href="/" prefetch={false} data-intent-prefetch="/" className="pf-back font-mono">
         <span aria-hidden="true">‹</span> {ui.profile.backToTimeline}
       </Link>
 

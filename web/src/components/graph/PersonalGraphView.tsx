@@ -25,6 +25,7 @@
 
 import { useCallback, useMemo, useState } from "react";
 import Link from "next/link";
+
 import { useRouter } from "next/navigation";
 
 import { GraphCanvas } from "@/components/graph/GraphCanvas";
@@ -158,8 +159,10 @@ export function PersonalGraphView({ catalog }: PersonalGraphViewProps) {
 
   // Mientras no se ha leído el perfil de este navegador no se sabe nada: se dice, sin fingir vacío.
   if (!hydrated) {
+    // pg-pending oculta el pie de página mientras se lee el perfil (ver globals.css): si no, aparecía
+    // pegado al aviso y saltaba hacia abajo al llegar el mapa.
     return (
-      <p className="pg-empty font-mono" role="status">
+      <p className="pg-empty pg-pending font-mono" role="status">
         {ui.profile.loading}
       </p>
     );
@@ -171,7 +174,7 @@ export function PersonalGraphView({ catalog }: PersonalGraphViewProps) {
       <section className="pg-state glass-2">
         <h2 className="pg-state-title font-display">{ui.graph.emptyTitle}</h2>
         <p className="pg-state-hint">{ui.graph.emptyHint}</p>
-        <Link href="/" className="pg-state-action">
+        <Link href="/" prefetch={false} data-intent-prefetch="/" className="pg-state-action">
           {ui.graph.emptyAction}
         </Link>
       </section>
@@ -197,7 +200,7 @@ export function PersonalGraphView({ catalog }: PersonalGraphViewProps) {
             </li>
           ))}
         </ul>
-        <Link href="/" className="pg-state-action">
+        <Link href="/" prefetch={false} data-intent-prefetch="/" className="pg-state-action">
           {ui.graph.emptyAction}
         </Link>
       </section>

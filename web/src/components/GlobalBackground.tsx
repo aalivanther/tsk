@@ -31,6 +31,7 @@
 
 import { useEffect, useState, type CSSProperties, type JSX } from "react";
 
+import { BackdropImage } from "@/components/BackdropImage";
 import { coverStyleFor } from "@/lib/timeline";
 import { preloadTintableImage, usePosterTint } from "@/lib/use-poster-tint";
 import { useFilter } from "@/lib/timeline-context";
@@ -39,6 +40,14 @@ import { type ReleaseSummary } from "@/gen/mdm7mo/catalog/v1/catalog_pb";
 // ROTATION_INTERVAL_MS es cada cuánto (en milisegundos) el fondo cambia al siguiente backdrop.
 // En español: ~6 segundos por estreno, un ritmo pausado que se nota pero no distrae de la timeline.
 const ROTATION_INTERVAL_MS = 6000;
+
+// CROSSFADE_MS es lo que dura el desvanecido entre dos fondos (transition de .tlx-global-layer en
+// globals.css, 1,6 s) más un margen. Durante ese tiempo las dos capas son translúcidas.
+const CROSSFADE_MS = 2000;
+
+// COVERED_ATTRIBUTE marca en <html> que este fondo TAPA por completo la ventana (ver Background.tsx):
+// mientras está puesta, las manchas de color animadas de debajo no se ven y se pausan.
+const COVERED_ATTRIBUTE = "data-bg-covered";
 
 // GlobalBackgroundProps son las propiedades del fondo global.
 // En español: recibe la lista de estrenos "estrella" (los mejores por calificación TMDB, ~5) que se
@@ -84,6 +93,36 @@ export function GlobalBackground({ releases, seeds }: GlobalBackgroundProps): JS
   // activeIndex es la posición del backdrop que se muestra AHORA (el que está "encendido").
   // Arranca en 0 (el mejor estreno) para que el servidor y el primer render del cliente coincidan.
   const [activeIndex, setActiveIndex] = useState(0);
+  // warm dice si ya se pueden pedir los fondos ANTERIOR y SIGUIENTE de la rotación. Al cargar solo se
+  // pide el activo (es lo que se ve); los otros dos esperan a que el navegador quede libre, o al primer
+  // giro, para no competir con lo que hace falta para pintar la portada.
+  const [warm, setWarm] = useState(false);
+  useEffect(() => {
+    const warmUp = () => setWarm(true);
+    if (typeof window.requestIdleCallback !== "function") {
+      const timer = window.setTimeout(warmUp, 1);
+      return () => window.clearTimeout(timer);
+    }
+    const handle = window.requestIdleCallback(warmUp, { timeout: 4000 });
+    return () => window.cancelIdleCallback(handle);
+  }, []);
+
+  // FONDO QUE TAPA. En el tema oscuro la capa activa es opaca y cubre toda la ventana, así que las
+  // manchas animadas del fondo orgánico (Background.tsx) quedan debajo sin verse y se pausan: su
+  // animación se repinta con un desenfoque enorme en cada fotograma. Solo se quita la marca durante
+  // un desvanecido entre fondos, que es el único momento en que algo de debajo se trasluce: la
+  // rotación la quita ANTES de empezar el giro y la vuelve a poner cuando acaba. El tema claro (capas
+  // translúcidas) se excluye en el propio CSS.
+  useEffect(() => {
+    if (releases.length === 0) {
+      return;
+    }
+    const root = document.documentElement;
+    root.setAttribute(COVERED_ATTRIBUTE, "");
+    return () => {
+      root.removeAttribute(COVERED_ATTRIBUTE);
+    };
+  }, [releases.length]);
 
   // Efecto de ROTACIÓN: cada ROTATION_INTERVAL_MS avanzamos al siguiente backdrop, en bucle.
   // En español: solo rota si (1) hay más de un estreno que mostrar y (2) el usuario NO pidió menos
@@ -94,6 +133,8 @@ export function GlobalBackground({ releases, seeds }: GlobalBackgroundProps): JS
     if (releases.length <= 1 || prefersReducedMotion()) {
       return;
     }
+    const root = document.documentElement;
+    let coverTimer = 0;
     const intervalId = window.setInterval(() => {
       // Pestaña oculta: no avanzamos. En español: rotar un fondo que nadie ve desperdicia CPU (cada
       // cambio dispara además la extracción de color con node-vibrant). Al volver a la pestaña, la
@@ -101,12 +142,18 @@ export function GlobalBackground({ releases, seeds }: GlobalBackgroundProps): JS
       if (document.hidden) {
         return;
       }
+      // Lo de debajo vuelve a moverse ANTES del desvanecido, y se pausa otra vez al terminar.
+      root.removeAttribute(COVERED_ATTRIBUTE);
+      window.clearTimeout(coverTimer);
+      coverTimer = window.setTimeout(() => root.setAttribute(COVERED_ATTRIBUTE, ""), CROSSFADE_MS);
       // Avanzamos circularmente: tras el último, volvemos al primero (módulo de la longitud).
       setActiveIndex((previousIndex) => (previousIndex + 1) % releases.length);
+      setWarm(true);
     }, ROTATION_INTERVAL_MS);
     // Limpieza: al desmontar (o si cambia la lista) detenemos el temporizador.
     return () => {
       window.clearInterval(intervalId);
+      window.clearTimeout(coverTimer);
     };
   }, [releases.length]);
 
@@ -131,14 +178,13 @@ export function GlobalBackground({ releases, seeds }: GlobalBackgroundProps): JS
   const nextIndex = (activeIndex + 1) % releases.length;
   const loadingWindow = [previousIndex, activeIndex, nextIndex];
 
-  // RESERVA DE LAS IMÁGENES CON PERMISO: se piden por adelantado y con permiso de origen cruzado las
-  // MISMAS imágenes que va a pintar el CSS, para que esa única descarga sirva también para sacarles el
-  // color. Sin esto el navegador se traía cada fondo dos veces (271 KB de más en la portada). Se
-  // reservan las tres de la ventana, no solo la activa, porque las otras dos serán la activa dentro de
-  // unos segundos y para entonces su copia ya tiene que venir con permiso. Ver preloadTintableImage.
-  for (const index of loadingWindow) {
-    preloadTintableImage(releases[index]?.backdropUrl ?? "");
-  }
+  // UNA SOLA DESCARGA POR FONDO. Cada capa pinta su fondo con una <img crossOrigin="anonymous"> (ver
+  // BackdropImage), no con un fondo CSS: un fondo CSS se pide SIN permiso de origen cruzado, y el
+  // lector de color (node-vibrant) necesita la copia CON permiso, así que el navegador se traía cada
+  // fondo dos veces (unos 520 KB de más en la portada). Con la <img> la misma descarga sirve para
+  // pintar y para sacar el color. Se adelanta con prioridad alta solo el fondo ACTIVO, que es lo que
+  // se ve al abrir; el anterior y el siguiente se piden cuando el navegador queda libre (warm).
+  preloadTintableImage(releases[activeIndex]?.backdropUrl ?? "", "high");
   if (activeBackdrop !== null) {
     preloadTintableImage(activeBackdrop.url);
   }
@@ -158,8 +204,9 @@ export function GlobalBackground({ releases, seeds }: GlobalBackgroundProps): JS
       */}
       {releases.map((release, index) => {
         const isActive = index === activeIndex;
-        // Solo las capas de la ventana de carga (anterior, activa y siguiente) montan su imagen.
-        const shouldLoadImage = loadingWindow.includes(index);
+        // Solo las capas de la ventana de carga (anterior, activa y siguiente) montan su imagen, y las
+        // dos vecinas solo cuando ya toca (warm).
+        const shouldLoadImage = isActive || (warm && loadingWindow.includes(index));
         // El backdrop real si hay URL; si no (Fase 0), el degradado determinista por semilla.
         // La semilla viene precalculada y alineada por posición (seeds[index]); si por algún motivo
         // faltara (longitudes distintas), caemos al propio índice como respaldo seguro.
@@ -172,13 +219,19 @@ export function GlobalBackground({ releases, seeds }: GlobalBackgroundProps): JS
           : undefined;
         if (coverStyle !== undefined) {
           delete coverStyle.opacity;
+          // La imagen no va de fondo CSS sino como <img> (BackdropImage, más abajo).
+          delete coverStyle.backgroundImage;
         }
         return (
           <div
             key={release.id}
             className={`tlx-global-layer${isActive ? " tlx-global-layer-on" : ""}`}
             style={coverStyle}
-          />
+          >
+            {shouldLoadImage ? (
+              <BackdropImage url={release.backdropUrl} priority={isActive ? "high" : "low"} />
+            ) : null}
+          </div>
         );
       })}
 
@@ -191,8 +244,10 @@ export function GlobalBackground({ releases, seeds }: GlobalBackgroundProps): JS
       {activeBackdrop !== null ? (
         <div
           className="tlx-global-override"
-          style={coverStyleFor(activeBackdrop.url, activeBackdrop.seed)}
-        />
+          style={withoutImage(coverStyleFor(activeBackdrop.url, activeBackdrop.seed))}
+        >
+          <BackdropImage url={activeBackdrop.url} priority="high" />
+        </div>
       ) : null}
 
       {/*
@@ -203,4 +258,13 @@ export function GlobalBackground({ releases, seeds }: GlobalBackgroundProps): JS
       <div className="tlx-global-vignette" />
     </div>
   );
+}
+
+// withoutImage quita el fondo CSS de un estilo de portada: la imagen la pone BackdropImage. Se queda
+// todo lo demás (el color de respaldo mientras llega la imagen, o el degradado si no hay imagen).
+// (Sin imagen, coverStyleFor devuelve el degradado en `background`, que no se toca.)
+function withoutImage(style: CSSProperties): CSSProperties {
+  const rest = { ...style };
+  delete rest.backgroundImage;
+  return rest;
 }
